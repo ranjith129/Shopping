@@ -1,0 +1,40 @@
+{
+  "project_info": {
+    "project_number": "531851036859",
+    "firebase_url": "https://xeragoshopping-default-rtdb.firebaseio.com",
+    "project_id": "xeragoshopping",
+    "storage_bucket": "xeragoshopping.appspot.com"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:531851036859:android:a71f9f683f18846eac819e",
+        "android_client_info": {
+          "package_name": "com.dhruva.shopping"
+        }
+      },
+      "oauth_client": [
+        {
+          "client_id": "531851036859-sajsmc66f9oe4hb7lb73hr0d1uvvc7qk.apps.googleusercontent.com",
+          "client_type": 3
+        }
+      ],
+      "api_key": [
+        {
+          "current_key": "AIzaSyBYNr-bzTTg4PtEl6uq9KkXfQHEp0ChxoA"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": [
+            {
+              "client_id": "531851036859-sajsmc66f9oe4hb7lb73hr0d1uvvc7qk.apps.googleusercontent.com",
+              "client_type": 3
+            }
+          ]
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}
