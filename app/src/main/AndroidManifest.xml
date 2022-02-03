@@ -28,6 +28,10 @@
         <activity android:name="com.dhruva.shopping.AdminAddNewProductActivity" />
         <activity android:name="com.theartofdev.edmodo.cropper.CropImageActivity" android:theme="@style/Base.Theme.AppCompat" />
         <activity android:name="com.dhruva.shopping.MainActivity">
+        </activity>
+        <activity
+            android:name=".SplashScreenActivity"
+            android:theme="@style/SplashTheme">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
                 <category android:name="android.intent.category.LAUNCHER" />
