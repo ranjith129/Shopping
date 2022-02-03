@@ -4,6 +4,7 @@ import android.content.Intent;
 import android.net.Uri;
 import android.os.Bundle;
 import android.text.TextUtils;
+import android.util.Log;
 import android.view.View;
 import android.widget.Button;
 import android.widget.EditText;
@@ -16,6 +17,7 @@ import com.google.android.gms.tasks.OnCompleteListener;
 import com.google.android.gms.tasks.OnFailureListener;
 import com.google.android.gms.tasks.OnSuccessListener;
 import com.google.android.gms.tasks.Task;
+import com.google.firebase.analytics.FirebaseAnalytics;
 import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.FirebaseDatabase;
 import com.google.firebase.storage.FirebaseStorage;
@@ -38,6 +40,7 @@ public class AdminAddNewProductActivity extends AppCompatActivity {
     private ProgressDialog loadingBar;
     private String ProdCurrentDate;
     private String ProdCurrentTime;
+    private FirebaseAnalytics mFirebaseAnalytics;
 
     @Override
     protected void onCreate(Bundle savedInstanceState)
@@ -46,6 +49,7 @@ public class AdminAddNewProductActivity extends AppCompatActivity {
             getSupportActionBar().hide();
         }
         super.onCreate(savedInstanceState);
+        mFirebaseAnalytics = FirebaseAnalytics.getInstance(this);
         setContentView(R.layout.activity_admin_add_new_product);
         CategoryName = getIntent().getExtras().get("category").toString();
         ProductImagesRef = FirebaseStorage.getInstance().getReference().child("ProductImages");
@@ -60,13 +64,23 @@ public class AdminAddNewProductActivity extends AppCompatActivity {
             @Override
             public void onClick(View view)
             {
+                Log.d("Step_name", "Input Product Images");
+                //Log.v("Step_name", "Input Product Images - B");
+                Bundle bundle = new Bundle();
+                bundle.putString(FirebaseAnalytics.Param.METHOD, "Input Product Images");
+                mFirebaseAnalytics.logEvent("Input_Product_Image", bundle);
                 OpenGallery();
             }
         });
+
         AddNewProductButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view)
             {
+                Log.d("Step_name", "Add new Product");
+                Bundle bundle = new Bundle();
+                bundle.putString(FirebaseAnalytics.Param.METHOD, "Add new Product");
+                mFirebaseAnalytics.logEvent("Add_New_Product", bundle);
                 ValidateProductData();
             }
         });
@@ -78,6 +92,7 @@ public class AdminAddNewProductActivity extends AppCompatActivity {
         galleryIntent.setType("image/*");
         startActivityForResult(galleryIntent, GalleryPick);
     }
+
     @Override
     protected void onActivityResult(int requestCode, int resultCode, Intent data)
     {
@@ -87,39 +102,66 @@ public class AdminAddNewProductActivity extends AppCompatActivity {
         {
             ImageUri = data.getData();
             InputProductImage.setImageURI(ImageUri);
+            Log.d("Step_name", "Set Product image");
+            Bundle bundle = new Bundle();
+            bundle.putString(FirebaseAnalytics.Param.METHOD, "Set Product image");
+            mFirebaseAnalytics.logEvent("Set_Product_image", bundle);
         }
     }
+
     private void ValidateProductData() {
         Description = InputProductDescription.getText().toString();
         Price = InputProductPrice.getText().toString();
         Pname = InputProductName.getText().toString();
         if (ImageUri == null)
         {
+            Log.d("Step_name", "Product image is mandatory");
+            Bundle bundle = new Bundle();
+            bundle.putString(FirebaseAnalytics.Param.METHOD, "Error: Product image is mandatory");
+            mFirebaseAnalytics.logEvent("Product_Image_Error", bundle);
             Toast.makeText(this, "Product image is mandatory. Kindly select any image.", Toast.LENGTH_SHORT).show();
         }
         else if (TextUtils.isEmpty(Description))
         {
+            Log.d("Step_name", "Please enter product description");
+            Bundle bundle = new Bundle();
+            bundle.putString(FirebaseAnalytics.Param.METHOD, "Error: Please enter product description");
+            mFirebaseAnalytics.logEvent("Product_Description_Error", bundle);
             Toast.makeText(this, "Please enter product description.", Toast.LENGTH_SHORT).show();
         }
         else if (TextUtils.isEmpty(Price))
         {
+            Log.d("Step_name", "Please enter product Price");
+            Bundle bundle = new Bundle();
+            bundle.putString(FirebaseAnalytics.Param.METHOD, "Error: Please enter product Price");
+            mFirebaseAnalytics.logEvent("Product_Price_Error", bundle);
             Toast.makeText(this, "Please enter product Price.", Toast.LENGTH_SHORT).show();
         }
         else if (TextUtils.isEmpty(Pname))
         {
+            Log.d("Step_name", "Please enter product name");
+            Bundle bundle = new Bundle();
+            bundle.putString(FirebaseAnalytics.Param.METHOD, "Error: Please enter product name");
+            mFirebaseAnalytics.logEvent("Product_Name_Error", bundle);
             Toast.makeText(this, "Please enter product name.", Toast.LENGTH_SHORT).show();
         }
         else
         {
+            Log.d("Step_name", "Set Product all information");
+            Bundle bundle = new Bundle();
+            bundle.putString(FirebaseAnalytics.Param.METHOD, "Message: Set Product all information");
+            mFirebaseAnalytics.logEvent("Product_Information_Updated", bundle);
             StoreProductInformation();
         }
     }
+
     private void StoreProductInformation()
     {
         loadingBar.setTitle("Add New Product");
         loadingBar.setMessage("Dear Admin, please wait while we are adding the new product.");
         loadingBar.setCanceledOnTouchOutside(false);
         loadingBar.show();
+        Log.d("Step_name", "Store Product all information");
         Pname = InputProductName.getText().toString().trim();
         Calendar calendar = Calendar.getInstance();
         SimpleDateFormat currentDate = new SimpleDateFormat("dd/MM/yyyy");
@@ -138,6 +180,10 @@ public class AdminAddNewProductActivity extends AppCompatActivity {
         uploadTask.addOnFailureListener(new OnFailureListener() {
             @Override
             public void onFailure(@NonNull Exception e) {
+                Log.d("Step_name", "Product Information Update error");
+                Bundle bundle = new Bundle();
+                bundle.putString(FirebaseAnalytics.Param.METHOD, "Error: Product Information Update error");
+                mFirebaseAnalytics.logEvent("Product_InfoUpdate_Error", bundle);
                 String message = e.toString();
                 Toast.makeText(AdminAddNewProductActivity.this, "Error: " + message, Toast.LENGTH_SHORT).show();
                 loadingBar.dismiss();
@@ -145,6 +191,10 @@ public class AdminAddNewProductActivity extends AppCompatActivity {
         }).addOnSuccessListener(new OnSuccessListener<UploadTask.TaskSnapshot>() {
             @Override
             public void onSuccess(UploadTask.TaskSnapshot taskSnapshot) {
+                Log.d("Step_name", "Product Image uploaded Successfully - A");
+                Bundle bundle = new Bundle();
+                bundle.putString(FirebaseAnalytics.Param.METHOD, "Message: Product Image uploaded Successfully");
+                mFirebaseAnalytics.logEvent("Product_Image_Updated", bundle);
                 Toast.makeText(AdminAddNewProductActivity.this, "Product Image uploaded Successfully.", Toast.LENGTH_SHORT).show();
                 Task<Uri> urlTask = uploadTask.continueWithTask(new Continuation<UploadTask.TaskSnapshot, Task<Uri>>() {
                     @Override
@@ -153,6 +203,10 @@ public class AdminAddNewProductActivity extends AppCompatActivity {
                         {
                             throw task.getException();
                         }
+                        Log.d("Step_name", "The Product image Update continued");
+                        Bundle bundle = new Bundle();
+                        bundle.putString(FirebaseAnalytics.Param.METHOD, "Message: The Product image Update continued");
+                        mFirebaseAnalytics.logEvent("Product_ImageUpdate_Continued", bundle);
                         downloadImageUrl = filePath.getDownloadUrl().toString();
                         return filePath.getDownloadUrl();
                     }
@@ -162,7 +216,11 @@ public class AdminAddNewProductActivity extends AppCompatActivity {
                         if (task.isSuccessful())
                         {
                             downloadImageUrl = task.getResult().toString();
-                            Toast.makeText(AdminAddNewProductActivity.this, "Got the Product image Url Successfully.", Toast.LENGTH_SHORT).show();
+                            Log.d("Step_name", "Download the Product image Url Successfully");
+                            Bundle bundle = new Bundle();
+                            bundle.putString(FirebaseAnalytics.Param.METHOD, "Message: Download the Product image Url Successfully");
+                            mFirebaseAnalytics.logEvent("Download_ProductImageUrl_Succeed", bundle);
+                            Toast.makeText(AdminAddNewProductActivity.this, "Download the Product image Url Successfully.", Toast.LENGTH_SHORT).show();
                             SaveProductInfoToDatabase();
                         }
                     }
@@ -190,6 +248,10 @@ public class AdminAddNewProductActivity extends AppCompatActivity {
                 {
                     if (task.isSuccessful())
                     {
+                        Log.d("Step_name", "New Product is added successfully");
+                        Bundle bundle = new Bundle();
+                        bundle.putString(FirebaseAnalytics.Param.METHOD, "Message: New Product is added successfully");
+                        mFirebaseAnalytics.logEvent("NewProduct_Added_Succeed", bundle);
                         Intent intent = new Intent(AdminAddNewProductActivity.this, AdminCategoryActivity.class);
                         startActivity(intent);
                         loadingBar.dismiss();
@@ -197,6 +259,10 @@ public class AdminAddNewProductActivity extends AppCompatActivity {
                     }
                     else
                     {
+                        Log.d("Step_name", "Add New Product is unsuccessful - A");
+                        Bundle bundle = new Bundle();
+                        bundle.putString(FirebaseAnalytics.Param.METHOD, "Message: Add New Product is unsuccessful");
+                        mFirebaseAnalytics.logEvent("Added_NewProduct_Failure", bundle);
                         loadingBar.dismiss();
                         String message = task.getException().toString();
                         Toast.makeText(AdminAddNewProductActivity.this, "Error: " + message, Toast.LENGTH_SHORT).show();

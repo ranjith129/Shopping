@@ -15,11 +15,10 @@
         android:textColor="#333333"
         android:layout_margin="25dp"
         android:textAlignment="center"
-        android:textStyle="bold"
-        />
+        android:textStyle="bold" />
 
     <EditText
-        android:id="@+id/shippment_name"
+        android:id="@+id/shipment_name"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:layout_below="@+id/txt"
@@ -33,13 +32,14 @@
         android:textSize="16dp"
         android:background="@drawable/input_design"
         android:inputType="textCapSentences"
-        />
+        android:cursorVisible="true"
+        android:textCursorDrawable="@null" />
 
     <EditText
-        android:id="@+id/shippment_phone_number"
+        android:id="@+id/shipment_phone_number"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:layout_below="@+id/shippment_name"
+        android:layout_below="@+id/shipment_name"
         android:textColor="#333333"
         android:textColorHint="#333333"
         android:layout_marginLeft="20dp"
@@ -50,13 +50,14 @@
         android:inputType="number"
         android:textSize="16dp"
         android:background="@drawable/input_design"
-        />
+        android:cursorVisible="true"
+        android:textCursorDrawable="@null" />
 
     <EditText
-        android:id="@+id/shippment_address"
+        android:id="@+id/shipment_address"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:layout_below="@+id/shippment_phone_number"
+        android:layout_below="@+id/shipment_phone_number"
         android:textColor="#333333"
         android:textColorHint="#333333"
         android:layout_marginLeft="20dp"
@@ -72,26 +73,25 @@
         android:overScrollMode="always"
         android:scrollbarStyle="insideInset"
         android:scrollbars="vertical"
-        android:lines="4"
-        />
+        android:cursorVisible="true"
+        android:textCursorDrawable="@null" />
 
     <EditText
-        android:id="@+id/shippment_city"
+        android:id="@+id/shipment_city"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:layout_below="@+id/shippment_address"
+        android:layout_below="@+id/shipment_address"
         android:textColor="#333333"
         android:textColorHint="#333333"
-        android:padding="15dp"
+        android:padding="10dp"
         android:layout_marginLeft="20dp"
         android:layout_marginTop="20dp"
         android:layout_marginRight="20dp"
         android:hint="Your City Name"
         android:textSize="16dp"
         android:background="@drawable/input_design"
-
-
-        />
+        android:cursorVisible="true"
+        android:textCursorDrawable="@null" />
 
     <Button
         android:id="@+id/confirm_final_order_btn"

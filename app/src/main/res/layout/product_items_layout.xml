@@ -9,7 +9,7 @@
     android:layout_marginStart="2dp"
     android:layout_marginEnd="2dp"
     app:cardElevation="15dp"
-    android:background="#f1f1f1"
+    android:background="#f9f9f9"
     >
     <RelativeLayout
         android:layout_width="match_parent"
@@ -17,7 +17,7 @@
         android:layout_marginTop="2dp"
         android:layout_marginStart="2dp"
         android:layout_marginEnd="2dp"
-        android:background="#f6f6f6"
+        android:background="#f9f9f9"
         >
         <ImageView
             android:id="@+id/product_image"

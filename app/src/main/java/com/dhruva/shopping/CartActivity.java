@@ -2,6 +2,7 @@ package com.dhruva.shopping;
 import android.content.DialogInterface;
 import android.content.Intent;
 import android.os.Bundle;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -20,6 +21,7 @@ import com.firebase.ui.database.FirebaseRecyclerAdapter;
 import com.firebase.ui.database.FirebaseRecyclerOptions;
 import com.google.android.gms.tasks.OnCompleteListener;
 import com.google.android.gms.tasks.Task;
+import com.google.firebase.analytics.FirebaseAnalytics;
 import com.google.firebase.database.DataSnapshot;
 import com.google.firebase.database.DatabaseError;
 import com.google.firebase.database.DatabaseReference;
@@ -32,12 +34,15 @@ public class CartActivity extends AppCompatActivity{
     private Button NextProcessBtn;
     private TextView txtTotalAmount, txtMsg1;
     private int overTotalPrice=0;private int TotalPrice=0;
+    private FirebaseAnalytics mFirebaseAnalytics;
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         if (getSupportActionBar() != null) {
             getSupportActionBar().hide();
         }
         super.onCreate(savedInstanceState);
+        mFirebaseAnalytics = FirebaseAnalytics.getInstance(this);
         setContentView(R.layout.activity_cart);
         recyclerView = findViewById(R.id.cart_list);
         recyclerView.setHasFixedSize(true);
@@ -51,6 +56,11 @@ public class CartActivity extends AppCompatActivity{
             @Override
             public void onClick(View view) {
                 txtTotalAmount.setText("Total Price: Rs"+String.valueOf(overTotalPrice));
+                Log.d("Step_name", "Product Order Process to next Conformation level");
+                Bundle bundle = new Bundle();
+                bundle.putString(FirebaseAnalytics.Param.METHOD, "Product Order Process to next Conformation level");
+                bundle.putString(FirebaseAnalytics.Param.PRICE, String.valueOf(overTotalPrice));
+                mFirebaseAnalytics.logEvent("Product_Total_Price", bundle);
                 Intent intent = new Intent(CartActivity.this,ConfirmFinalOrderActivity.class);
                 intent.putExtra("Total Price", String.valueOf(overTotalPrice));
                 startActivity(intent);
@@ -81,16 +91,22 @@ public class CartActivity extends AppCompatActivity{
                     @Override
                     public void onClick(View view) {
                         CharSequence options[] = new CharSequence[]
-                            {
-                                "Edit",
-                                "Remove"
-                            };
+                            {"Edit","Remove"};
                         AlertDialog.Builder builder = new AlertDialog.Builder(CartActivity.this);
                         builder.setTitle("Cart Options: ");
                         builder.setItems(options, new DialogInterface.OnClickListener() {
                             @Override
                             public void onClick(DialogInterface dialogInterface, int i) {
                                 if (i==0){
+                                    Log.d("Step_name", "Cart item edit");
+                                    Bundle bundle = new Bundle();
+                                    bundle.putString(FirebaseAnalytics.Param.METHOD, "Cart item edit");
+                                    bundle.putString(FirebaseAnalytics.Param.PRICE, String.valueOf(FinalPrice));
+                                    bundle.putString("Total_Price", String.valueOf(overTotalPrice));
+                                    bundle.putString(FirebaseAnalytics.Param.ITEM_ID, String.valueOf(model.getPid()));
+                                    bundle.putString(FirebaseAnalytics.Param.ITEM_NAME, String.valueOf(model.getPname()));
+                                    bundle.putString(FirebaseAnalytics.Param.QUANTITY, String.valueOf(model.getQuantity()));
+                                    mFirebaseAnalytics.logEvent("Cart_Items_Edited", bundle);
                                     Intent intent = new Intent(CartActivity.this,ProductDetailsActivity.class);
                                     intent.putExtra("pid", model.getPid());
                                     startActivity(intent);
@@ -105,6 +121,10 @@ public class CartActivity extends AppCompatActivity{
                                             @Override
                                             public void onComplete(@NonNull Task<Void> task) {
                                                 if (task.isSuccessful()){
+                                                    Log.d("Step_name", "Cart Item removed");
+                                                    Bundle bundle = new Bundle();
+                                                    bundle.putString(FirebaseAnalytics.Param.METHOD, "Cart Item removed");
+                                                    mFirebaseAnalytics.logEvent("Cart_Item_Removed", bundle);
                                                     Toast.makeText(CartActivity.this,"Item removed Successfully.",Toast.LENGTH_SHORT).show();
                                                     Intent intent = new Intent(CartActivity.this,HomeActivity.class);
                                                     startActivity(intent);
@@ -142,27 +162,37 @@ public class CartActivity extends AppCompatActivity{
                     String shippingState = dataSnapshot.child("state").getValue().toString();
                     String userName = dataSnapshot.child("name").getValue().toString();
                     if (shippingState.equals("Shipped")){
-                        txtTotalAmount.setText("TDear "+userName+"\n order is shipped successfully.");
+                        txtTotalAmount.setText("Dear "+userName+"\n order is shipped successfully.");
+                        Log.d("Step_name", "Product order is shipped");
                         recyclerView.setVisibility(View.GONE);
                         txtMsg1.setVisibility(View.VISIBLE);
                         txtMsg1.setText("Congratulations, Your Final order has been shipped successfully. Soon you will received your order at your door step.");
                         NextProcessBtn.setVisibility(View.GONE);
                         Toast.makeText(CartActivity.this,"You can purchase more products, Once you received your first order.",Toast.LENGTH_SHORT).show();
+                        Bundle bundle = new Bundle();
+                        bundle.putString(FirebaseAnalytics.Param.METHOD, "Product order is shipped");
+                        mFirebaseAnalytics.logEvent("Product_Shipped", bundle);
                     }
                     else if (shippingState.equals("Not Shipped")){
                         txtTotalAmount.setText("Shipping State = Not Shipped");
                         recyclerView.setVisibility(View.GONE);
                         txtMsg1.setVisibility(View.VISIBLE);
-
+                        Log.d("Step_name", "Cart Item Not Shipped");
                         NextProcessBtn.setVisibility(View.GONE);
                         Toast.makeText(CartActivity.this,"You can purchase more products, Once you received your first order.",Toast.LENGTH_SHORT).show();
+                        Bundle bundle = new Bundle();
+                        bundle.putString(FirebaseAnalytics.Param.METHOD, "Cart Item Not Shipped");
+                        mFirebaseAnalytics.logEvent("Product_Items_NotShipped", bundle);
                     }
                 }
             }
 
             @Override
             public void onCancelled(DatabaseError databaseError) {
-
+                Log.d("Step_name", "Cart Item Cancelled");
+                Bundle bundle = new Bundle();
+                bundle.putString(FirebaseAnalytics.Param.METHOD, "Cart Item Cancelled");
+                mFirebaseAnalytics.logEvent("Cart_Items_Cancelled", bundle);
             }
         });
     }

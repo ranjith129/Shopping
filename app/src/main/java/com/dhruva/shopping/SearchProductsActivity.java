@@ -4,6 +4,7 @@ import android.content.Intent;
 
 import android.os.Bundle;
 
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -20,6 +21,7 @@ import com.dhruva.shopping.Model.Products;
 import com.dhruva.shopping.ViewHolder.ProductViewHolder;
 import com.firebase.ui.database.FirebaseRecyclerAdapter;
 import com.firebase.ui.database.FirebaseRecyclerOptions;
+import com.google.firebase.analytics.FirebaseAnalytics;
 import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.FirebaseDatabase;
 import com.squareup.picasso.Picasso;
@@ -29,6 +31,7 @@ public class SearchProductsActivity extends AppCompatActivity {
     private EditText inputText;
     private RecyclerView searchList;
     private String searchInput;
+    private FirebaseAnalytics mFirebaseAnalytics;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -36,6 +39,7 @@ public class SearchProductsActivity extends AppCompatActivity {
             getSupportActionBar().hide();
         }
         super.onCreate(savedInstanceState);
+        mFirebaseAnalytics = FirebaseAnalytics.getInstance(this);
         setContentView(R.layout.activity_search_products);
         inputText = findViewById(R.id.search_product_name);
         searchBtn = findViewById(R.id.search_btn);
@@ -46,6 +50,10 @@ public class SearchProductsActivity extends AppCompatActivity {
             public void onClick(View view) {
                 searchInput = inputText.getText().toString();
                 onStart();
+                Log.d("Step_name", "Search given item name");
+                Bundle bundle = new Bundle();
+                bundle.putString(FirebaseAnalytics.Param.METHOD, "Button: Search given item name");
+                mFirebaseAnalytics.logEvent(FirebaseAnalytics.Event.SEARCH, bundle);
             }
         });
 
@@ -68,6 +76,14 @@ public class SearchProductsActivity extends AppCompatActivity {
                         holder.itemView.setOnClickListener(new View.OnClickListener() {
                             @Override
                             public void onClick(View view) {
+                                Log.d("Step_name", "Searched Product item Details view");
+                                Bundle bundle = new Bundle();
+                                bundle.putString(FirebaseAnalytics.Param.METHOD, "Searched Product item Details view");
+                                bundle.putString("Product_Price", String.valueOf(model.getPrice()));
+                                bundle.putString("Product_Name", String.valueOf(model.getPname()));
+                                bundle.putString("Product_ID", String.valueOf(model.getDescription()));
+                                bundle.putString("Product_ImageUrl", String.valueOf(model.getImage()));
+                                mFirebaseAnalytics.logEvent("Searched_ProductDetails", bundle);
                                 Intent intent =new Intent(SearchProductsActivity.this,ProductDetailsActivity.class);
                                 intent.putExtra("pid",model.getPid());
                                 startActivity(intent);

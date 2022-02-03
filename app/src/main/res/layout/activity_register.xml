@@ -4,7 +4,7 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:background="#FAFAFA"
+    android:background="#f7f7f7"
     tools:context=".RegisterActivity">
     <ImageView
         android:id="@+id/register_applogo"
@@ -32,6 +32,8 @@
         android:textSize="16dp"
         android:drawableStart="@drawable/user"
         android:drawablePadding="10dp"
+        android:cursorVisible="true"
+        android:textCursorDrawable="@null"
         />
 
     <EditText
@@ -51,6 +53,8 @@
         android:layout_marginTop="20dp"
         android:drawableStart="@drawable/phone"
         android:drawablePadding="10dp"
+        android:cursorVisible="true"
+        android:textCursorDrawable="@null"
         />
 
     <EditText
@@ -70,6 +74,8 @@
         android:textSize="16dp"
         android:drawableStart="@drawable/password"
         android:drawablePadding="10dp"
+        android:cursorVisible="true"
+        android:textCursorDrawable="@null"
         />
 
     <Button

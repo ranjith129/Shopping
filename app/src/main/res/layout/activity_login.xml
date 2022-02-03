@@ -4,7 +4,7 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:background="#FAFAFA"
+    android:background="#f7f7f7"
     tools:context=".LoginActivity">
     <ImageView
         android:id="@+id/login_applogo"
@@ -31,6 +31,8 @@
         android:textSize="16dp"
         android:drawableStart="@drawable/phone"
         android:drawablePadding="10dp"
+        android:cursorVisible="true"
+        android:textCursorDrawable="@null"
         />
 
     <EditText
@@ -49,7 +51,9 @@
         android:padding="15dp"
         android:textColor="#333333"
         android:textColorHint="#333333"
-        android:textSize="16dp" />
+        android:textSize="16dp"
+        android:cursorVisible="true"
+        android:textCursorDrawable="@null" />
 
     <LinearLayout
         android:id="@+id/linear_layout_1"
@@ -70,8 +74,7 @@
             app:cbd_strokeColor="#333333"
             android:gravity="center_vertical"
             android:textSize="16dp"
-            android:layout_marginLeft="20dp"
-            />
+            android:layout_marginLeft="20dp" />
 
         <TextView
             android:id="@+id/forget_password_link"
@@ -80,8 +83,7 @@
             android:text="Forget Password?"
             android:textColor="#333333"
             android:textSize="16dp"
-            android:layout_marginLeft="100dp"
-            />
+            android:layout_marginLeft="100dp" />
 
     </LinearLayout>
 
@@ -98,8 +100,7 @@
         android:textAllCaps="false"
         android:textSize="20dp"
         android:text="Login"
-        android:textColor="#ffffff"
-        />
+        android:textColor="#ffffff" />
 
     <TextView
         android:id="@+id/admin_panel_link"
@@ -112,8 +113,7 @@
         android:textSize="16dp"
         android:layout_marginTop="20dp"
         android:layout_marginLeft="80dp"
-        android:layout_marginEnd="15dp"
-        />
+        android:layout_marginEnd="15dp" />
 
     <TextView
         android:id="@+id/not_admin_panel_link"

@@ -8,8 +8,8 @@ import androidx.drawerlayout.widget.DrawerLayout;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 import android.content.Intent;
-import android.graphics.Color;
 import android.os.Bundle;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.Menu;
 import android.view.MenuItem;
@@ -25,6 +25,7 @@ import com.firebase.ui.database.FirebaseRecyclerAdapter;
 import com.firebase.ui.database.FirebaseRecyclerOptions;
 import com.google.android.material.floatingactionbutton.FloatingActionButton;
 import com.google.android.material.navigation.NavigationView;
+import com.google.firebase.analytics.FirebaseAnalytics;
 import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.FirebaseDatabase;
 import com.squareup.picasso.Picasso;
@@ -39,6 +40,7 @@ public class HomeActivity extends AppCompatActivity implements NavigationView.On
     TextView textView;
     private RecyclerView recyclerView;
     RecyclerView.LayoutManager layoutManager;
+    private FirebaseAnalytics mFirebaseAnalytics;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -46,6 +48,7 @@ public class HomeActivity extends AppCompatActivity implements NavigationView.On
             getSupportActionBar().hide();
         }
         super.onCreate(savedInstanceState);
+        mFirebaseAnalytics = FirebaseAnalytics.getInstance(this);
         setContentView(R.layout.activity_home);
         AppCompatDelegate.setDefaultNightMode(AppCompatDelegate.MODE_NIGHT_YES);
         ProductsRef = FirebaseDatabase.getInstance().getReference().child("Products");
@@ -74,12 +77,16 @@ public class HomeActivity extends AppCompatActivity implements NavigationView.On
         fab.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
+                Log.d("Step_name", "View cart items");
+                Bundle bundle = new Bundle();
+                bundle.putString(FirebaseAnalytics.Param.METHOD, "View cart items");
+                mFirebaseAnalytics.logEvent(FirebaseAnalytics.Event.VIEW_CART, bundle);
                 Intent intent = new Intent(HomeActivity.this,CartActivity.class);
                 startActivity(intent);
             }
         });
-
     }
+
     @Override
     protected void onStart() {
         super.onStart();
@@ -99,6 +106,13 @@ public class HomeActivity extends AppCompatActivity implements NavigationView.On
                     holder.itemView.setOnClickListener(new View.OnClickListener() {
                         @Override
                         public void onClick(View view) {
+                            Log.d("Step_name", "Product details view");
+                            Bundle bundle = new Bundle();
+                            bundle.putString("Product_Name", String.valueOf(model.getPname()));
+                            bundle.putString("Product_Description", String.valueOf(model.getDescription()));
+                            bundle.putString("Product_Price", String.valueOf(model.getPrice()));
+                            bundle.putString(FirebaseAnalytics.Param.METHOD, "Product details view");
+                            mFirebaseAnalytics.logEvent("Product_Detail_View", bundle);
                             Intent intent =new Intent(HomeActivity.this,ProductDetailsActivity.class);
                             intent.putExtra("pid",model.getPid());
                             startActivity(intent);
@@ -116,14 +130,24 @@ public class HomeActivity extends AppCompatActivity implements NavigationView.On
             };
         recyclerView.setAdapter(adapter);
         adapter.startListening();
-
     }
+
     @Override
     public void onBackPressed(){
         if(drawerLayout.isDrawerOpen(GravityCompat.START)){
+            Log.d("Step_name", "Previous Activity Opened");
+            Bundle bundle = new Bundle();
+            bundle.putString(FirebaseAnalytics.Param.METHOD, "Button: Back, Previous Activity Opened");
+            mFirebaseAnalytics.logEvent("Back_Previous_Activity", bundle);
             drawerLayout.closeDrawer(GravityCompat.START);
         }
-        else { super.onBackPressed(); }
+        else {
+            Log.d("Step_name", "Back button pressed");
+            Bundle bundle = new Bundle();
+            bundle.putString(FirebaseAnalytics.Param.METHOD, "Back button pressed Start");
+            mFirebaseAnalytics.logEvent("Back_Button_Pressed", bundle);
+            super.onBackPressed();
+        }
     }
 
     @Override
@@ -138,17 +162,37 @@ public class HomeActivity extends AppCompatActivity implements NavigationView.On
         // Handle action bar item clicks here. The action bar will automatically handle clicks on the Home/Up button, so long as you specify a parent activity in AndroidManifest.xml.
         int id = item.getItemId();
         if (id == R.id.nav_cart) {
+            Log.d("Step_name", "Action bar Navigating to Cart view");
+            Bundle bundle = new Bundle();
+            bundle.putString(FirebaseAnalytics.Param.METHOD, "Action bar Navigating to Cart view");
+            mFirebaseAnalytics.logEvent("ActionBar_NavigationTo_View_Cart", bundle);
             Intent intent = new Intent(HomeActivity.this,CartActivity.class);
             startActivity(intent);
         } else if (id == R.id.nav_search) {
+            Log.d("Step_name", "Action bar Navigation to Items Search");
+            Bundle bundle = new Bundle();
+            bundle.putString(FirebaseAnalytics.Param.METHOD, "Action bar Navigation to Items Search");
+            mFirebaseAnalytics.logEvent("ActionBar_NavigationTo_Search", bundle);
             Intent intent = new Intent(HomeActivity.this,SearchProductsActivity.class);
             startActivity(intent);
         } else if (id == R.id.nav_categories) {
+            Log.d("Step_name", "Action bar Navigation to Categories");
+            Bundle bundle = new Bundle();
+            bundle.putString(FirebaseAnalytics.Param.METHOD, "Action bar Navigation to Categories");
+            mFirebaseAnalytics.logEvent("ActionBar_NavigationTo_Categories", bundle);
             Toast.makeText(HomeActivity.this,"Categories Clicked.",Toast.LENGTH_SHORT).show();
         } else if (id == R.id.nav_settings) {
-            Intent intent=new Intent(HomeActivity.this,SettinsActivity.class);
+            Log.d("Step_name", "Action bar Navigation to Settings");
+            Bundle bundle = new Bundle();
+            bundle.putString(FirebaseAnalytics.Param.METHOD, "Action bar Navigation to Settings");
+            mFirebaseAnalytics.logEvent("ActionBar_NavigationTo_Settings", bundle);
+            Intent intent=new Intent(HomeActivity.this, SettingsActivity.class);
             startActivity(intent);
         } else if (id == R.id.nav_logout) {
+            Log.d("Step_name", "Action bar Navigation to Logout Screen (Main)");
+            Bundle bundle = new Bundle();
+            bundle.putString(FirebaseAnalytics.Param.METHOD, "Action bar Navigation to Logout (Main) Screen");
+            mFirebaseAnalytics.logEvent("ActionBar_NavigationTo_Logout", bundle);
             Paper.book().destroy();
             Intent intent=new Intent(HomeActivity.this,MainActivity.class);
             intent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK |Intent.FLAG_ACTIVITY_CLEAR_TASK );
@@ -164,17 +208,37 @@ public class HomeActivity extends AppCompatActivity implements NavigationView.On
         // Handle navigation view item clicks here.
         int id = item.getItemId();
         if (id == R.id.nav_cart) {
+            Log.d("Step_name", "Menu Navigating to Cart view");
+            Bundle bundle = new Bundle();
+            bundle.putString(FirebaseAnalytics.Param.METHOD, "Menu bar Navigating to Cart view");
+            mFirebaseAnalytics.logEvent("Menu_NavigationTo_View_Cart", bundle);
             Intent intent = new Intent(HomeActivity.this,CartActivity.class);
             startActivity(intent);
         } else if (id == R.id.nav_search) {
+            Log.d("Step_name", "Menu Navigation to Items Search");
+            Bundle bundle = new Bundle();
+            bundle.putString(FirebaseAnalytics.Param.METHOD, "Menu Navigation to Items Search");
+            mFirebaseAnalytics.logEvent("Menu_NavigationTo_Search", bundle);
             Intent intent = new Intent(HomeActivity.this,SearchProductsActivity.class);
             startActivity(intent);
         } else if (id == R.id.nav_categories) {
+            Log.d("Step_name", "Menu Navigation to Categories");
+            Bundle bundle = new Bundle();
+            bundle.putString(FirebaseAnalytics.Param.METHOD, "Menu Navigation to Categories");
+            mFirebaseAnalytics.logEvent("Menu_NavigationTo_Categories", bundle);
             Toast.makeText(HomeActivity.this,"Categories Clicked.",Toast.LENGTH_SHORT).show();
         } else if (id == R.id.nav_settings) {
-            Intent intent=new Intent(HomeActivity.this,SettinsActivity.class);
+            Log.d("Step_name", "Menu Navigation to Settings");
+            Bundle bundle = new Bundle();
+            bundle.putString(FirebaseAnalytics.Param.METHOD, "Menu Navigation to Settings");
+            mFirebaseAnalytics.logEvent("Menu_NavigationTo_Setting", bundle);
+            Intent intent=new Intent(HomeActivity.this, SettingsActivity.class);
             startActivity(intent);
         } else if (id == R.id.nav_logout) {
+            Log.d("Step_name", "Menu Navigation to Logout Screen (Main)");
+            Bundle bundle = new Bundle();
+            bundle.putString(FirebaseAnalytics.Param.METHOD, "Menu Navigation to Logout (Main) Screen");
+            mFirebaseAnalytics.logEvent("Menu_NavigationTo_Logout", bundle);
             Paper.book().destroy();
             Intent intent=new Intent(HomeActivity.this,MainActivity.class);
             intent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK |Intent.FLAG_ACTIVITY_CLEAR_TASK );
