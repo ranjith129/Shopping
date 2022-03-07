@@ -5,6 +5,7 @@ import android.os.Bundle;
 import android.text.TextUtils;
 import android.util.Log;
 import android.view.View;
+import android.view.WindowManager;
 import android.widget.Button;
 import android.widget.EditText;
 import android.widget.TextView;
@@ -21,6 +22,18 @@ import com.google.firebase.database.FirebaseDatabase;
 import com.google.firebase.database.ValueEventListener;
 import com.rey.material.widget.CheckBox;
 import io.paperdb.Paper;
+import com.adobe.marketing.mobile.AdobeCallback;
+import com.adobe.marketing.mobile.Analytics;
+import com.adobe.marketing.mobile.Identity;
+import com.adobe.marketing.mobile.InvalidInitException;
+import com.adobe.marketing.mobile.Lifecycle;
+import com.adobe.marketing.mobile.LoggingMode;
+import com.adobe.marketing.mobile.MobileCore;
+import com.adobe.marketing.mobile.Signal;
+import com.adobe.marketing.mobile.Target;
+import com.adobe.marketing.mobile.UserProfile;
+
+import java.util.HashMap;
 
 public class LoginActivity extends AppCompatActivity {
     private EditText InputPhoneNumber, InputPassword;
@@ -36,6 +49,7 @@ public class LoginActivity extends AppCompatActivity {
         if (getSupportActionBar() != null) {
             getSupportActionBar().hide();
         }
+        getWindow().setSoftInputMode(WindowManager.LayoutParams.SOFT_INPUT_STATE_VISIBLE| WindowManager.LayoutParams.SOFT_INPUT_ADJUST_RESIZE);
         super.onCreate(savedInstanceState);
         mFirebaseAnalytics = FirebaseAnalytics.getInstance(this);
         setContentView(R.layout.activity_login);
@@ -67,6 +81,9 @@ public class LoginActivity extends AppCompatActivity {
                 Bundle bundle = new Bundle();
                 bundle.putString(FirebaseAnalytics.Param.METHOD, "Message: Login as Admin");
                 mFirebaseAnalytics.logEvent("Admin_Login", bundle);
+                HashMap cData = new HashMap<String, String>();
+                cData.put("cd.AdminLogin", "Login as Admin");
+                MobileCore.trackState("LoginScreen", cData);
             }
         });
 
@@ -82,6 +99,9 @@ public class LoginActivity extends AppCompatActivity {
                 Bundle bundle = new Bundle();
                 bundle.putString(FirebaseAnalytics.Param.METHOD, "Message: Login as User");
                 mFirebaseAnalytics.logEvent("User_Login", bundle);
+                HashMap cData = new HashMap<String, String>();
+                cData.put("cd.UserLogin", "Login as User");
+                MobileCore.trackState("LoginScreen", cData);
             }
         });
 
@@ -96,12 +116,18 @@ public class LoginActivity extends AppCompatActivity {
             Bundle bundle = new Bundle();
             bundle.putString(FirebaseAnalytics.Param.METHOD, "Error: Enter your phone number");
             mFirebaseAnalytics.logEvent("User_PhoneNumber_Error", bundle);
+            HashMap cData = new HashMap<String, String>();
+            cData.put("cd.UserPhoneNumberError", "Enter your phone number");
+            MobileCore.trackState("LoginScreen", cData);
             Toast.makeText(this, "Please enter your phone number.", Toast.LENGTH_SHORT).show();
         }else if (!phone.matches("^[6-9]{1}[0-9]{9}$")) {
             Log.d("Step_name", "Enter valid phone number - A");
             Bundle bundle = new Bundle();
             bundle.putString(FirebaseAnalytics.Param.METHOD, "Error: Enter valid phone number");
             mFirebaseAnalytics.logEvent("User_PhoneNumber_ValidError", bundle);
+            HashMap cData = new HashMap<String, String>();
+            cData.put("cd.UserPhoneNumberValidError", "Enter valid phone number");
+            MobileCore.trackState("LoginScreen", cData);
             Toast.makeText(this, "Please enter valid phone number. Phone number Hint: First number start only with 6-9 maximum 10 digit", Toast.LENGTH_SHORT).show();
         }
         else if (TextUtils.isEmpty(password))
@@ -110,12 +136,18 @@ public class LoginActivity extends AppCompatActivity {
             Bundle bundle = new Bundle();
             bundle.putString(FirebaseAnalytics.Param.METHOD, "Error: Enter password");
             mFirebaseAnalytics.logEvent("User_Password_Error", bundle);
+            HashMap cData = new HashMap<String, String>();
+            cData.put("cd.UserPasswordError", "Enter password");
+            MobileCore.trackState("LoginScreen", cData);
             Toast.makeText(this, "Please enter your password.", Toast.LENGTH_SHORT).show();
         }else if (!password.matches("^(?=.*\\d)(?=.*[a-z])(?=.*[A-Z])(?=.*[~!@#$%^&*-+=()])[^\\s]{8,20}$")) {
-            Log.d("Step_name", "Enter valid password - A");
+            Log.d("Step_name", "Enter valid password");
             Bundle bundle = new Bundle();
             bundle.putString(FirebaseAnalytics.Param.METHOD, "Error: Enter valid password");
             mFirebaseAnalytics.logEvent("User_Password_ValidError", bundle);
+            HashMap cData = new HashMap<String, String>();
+            cData.put("cd.UserPasswordValidError", "Enter valid password");
+            MobileCore.trackState("LoginScreen", cData);
             Toast.makeText(this, "Please enter valid password. Password Hint: Password required combined with following all one digit/lower/upper/special character with maximum 8 to 20 characters", Toast.LENGTH_SHORT).show();
         }
         else
@@ -126,10 +158,12 @@ public class LoginActivity extends AppCompatActivity {
             Bundle bundle = new Bundle();
             bundle.putString(FirebaseAnalytics.Param.METHOD, "Button: Login into User Account");
             mFirebaseAnalytics.logEvent("User_LoginAccount", bundle);
+            HashMap cData = new HashMap<String, String>();
+            cData.put("cd.UserLoginAccount", "Login into User Account");
+            MobileCore.trackState("LoginScreen", cData);
             loadingBar.setCanceledOnTouchOutside(false);
             loadingBar.show();
             AllowAccessToAccount(phone, password);
-
         }
     }
 
@@ -146,7 +180,6 @@ public class LoginActivity extends AppCompatActivity {
             @Override
             public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
                 if (dataSnapshot.child(parentDbName).child(phone).exists()){
-
                     Users usersData = dataSnapshot.child(parentDbName).child(phone).getValue(Users.class);
                     if (usersData.getPhone().equals(phone))
                     {
@@ -160,6 +193,9 @@ public class LoginActivity extends AppCompatActivity {
                                 Bundle bundle = new Bundle();
                                 bundle.putString(FirebaseAnalytics.Param.METHOD, "Message: Admin Login Succeed");
                                 mFirebaseAnalytics.logEvent("Admin_Login_Succeed", bundle);
+                                HashMap cData = new HashMap<String, String>();
+                                cData.put("cd.AdminLoginSucceed", "Admin Login Succeed");
+                                MobileCore.trackState("LoginScreen", cData);
                                 Intent intent = new Intent(LoginActivity.this, com.dhruva.shopping.AdminCategoryActivity.class);
                                 startActivity(intent);
                             }
@@ -170,6 +206,9 @@ public class LoginActivity extends AppCompatActivity {
                                 Bundle bundle = new Bundle();
                                 bundle.putString(FirebaseAnalytics.Param.METHOD, "Message: User Login Succeed");
                                 mFirebaseAnalytics.logEvent("User_Login_Succeed", bundle);
+                                HashMap cData = new HashMap<String, String>();
+                                cData.put("cd.UserLoginSucceed", "User Login Succeed");
+                                MobileCore.trackState("LoginScreen", cData);
                                 Intent intent = new Intent(LoginActivity.this, HomeActivity.class);
                                 Prevalent.currentOnlineUser = usersData;
                                 startActivity(intent);
@@ -181,6 +220,9 @@ public class LoginActivity extends AppCompatActivity {
                             Bundle bundle = new Bundle();
                             bundle.putString(FirebaseAnalytics.Param.METHOD, "Error: Password is incorrect");
                             mFirebaseAnalytics.logEvent("Input_Password_Error", bundle);
+                            HashMap cData = new HashMap<String, String>();
+                            cData.put("cd.InputPasswordError", "Password is incorrect");
+                            MobileCore.trackState("LoginScreen", cData);
                             Toast.makeText(LoginActivity.this,"Password is incorrect.",Toast.LENGTH_SHORT).show();
                         }
                     }
@@ -191,6 +233,9 @@ public class LoginActivity extends AppCompatActivity {
                     Bundle bundle = new Bundle();
                     bundle.putString(FirebaseAnalytics.Param.METHOD, "Message: Phone number do not Exists");
                     mFirebaseAnalytics.logEvent("PhoneNumber_DoNotExists_Error", bundle);
+                    HashMap cData = new HashMap<String, String>();
+                    cData.put("cd.PhoneNumberDoNotExistsError", "Phone number do not Exists");
+                    MobileCore.trackState("LoginScreen", cData);
                     loadingBar.dismiss();
                 }
             }
@@ -201,6 +246,9 @@ public class LoginActivity extends AppCompatActivity {
                 Bundle bundle = new Bundle();
                 bundle.putString(FirebaseAnalytics.Param.METHOD, "Message: Login Activity Cancelled");
                 mFirebaseAnalytics.logEvent("Login_Activity_Cancelled", bundle);
+                HashMap cData = new HashMap<String, String>();
+                cData.put("cd.LoginActivityCancelled", "Login Activity Cancelled");
+                MobileCore.trackState("LoginScreen", cData);
             }
         });
     }

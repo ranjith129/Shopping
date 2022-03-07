@@ -26,7 +26,7 @@
         android:layout_marginLeft="15dp"
         android:layout_marginRight="15dp"
         android:hint="Name"
-        android:inputType="text"
+        android:inputType="text|textPersonName|textCapWords"
         android:textColor="#333333"
         android:textColorHint="#333333"
         android:textSize="16dp"
@@ -76,7 +76,7 @@
         android:drawablePadding="10dp"
         android:cursorVisible="true"
         android:textCursorDrawable="@null"
-        />
+        android:autofillHints="" />
 
     <Button
         android:id="@+id/register_btn"
@@ -92,6 +92,7 @@
         android:textSize="20dp"
         android:text="Create Account"
         android:textColor="@android:color/white"
+
         />
 
 </RelativeLayout>

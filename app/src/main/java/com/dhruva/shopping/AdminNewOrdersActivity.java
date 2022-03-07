@@ -20,8 +20,19 @@ import com.firebase.ui.database.FirebaseRecyclerOptions;
 import com.google.firebase.analytics.FirebaseAnalytics;
 import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.FirebaseDatabase;
+import com.adobe.marketing.mobile.AdobeCallback;
+import com.adobe.marketing.mobile.Analytics;
+import com.adobe.marketing.mobile.Identity;
+import com.adobe.marketing.mobile.InvalidInitException;
+import com.adobe.marketing.mobile.Lifecycle;
+import com.adobe.marketing.mobile.LoggingMode;
+import com.adobe.marketing.mobile.MobileCore;
+import com.adobe.marketing.mobile.Signal;
+import com.adobe.marketing.mobile.Target;
+import com.adobe.marketing.mobile.UserProfile;
 import java.text.SimpleDateFormat;
 import java.util.Calendar;
+import java.util.HashMap;
 
 public class AdminNewOrdersActivity extends AppCompatActivity {
     private RecyclerView ordersList;
@@ -44,84 +55,98 @@ public class AdminNewOrdersActivity extends AppCompatActivity {
     @Override
     protected void onStart() {
         super.onStart();
-        String saveCurrentTime,saveCurrentDate;
-        Calendar calForDate = Calendar.getInstance();
-        SimpleDateFormat currentDate = new SimpleDateFormat("dd/MM/yyyy");
-        saveCurrentDate = currentDate.format(calForDate.getTime());
-        SimpleDateFormat currentTime = new SimpleDateFormat("HH:mm:ss");
-        saveCurrentTime = currentTime.format(calForDate.getTime());
+        //String saveCurrentTime,saveCurrentDate;
+        //Calendar calForDate = Calendar.getInstance();
+        //SimpleDateFormat currentDate = new SimpleDateFormat("dd/MM/yyyy");
+        //saveCurrentDate = currentDate.format(calForDate.getTime());
+        //SimpleDateFormat currentTime = new SimpleDateFormat("HH:mm:ss");
+        //saveCurrentTime = currentTime.format(calForDate.getTime());
+
         FirebaseRecyclerOptions<AdminOrders> options= new FirebaseRecyclerOptions.Builder<AdminOrders>()
-            .setQuery(ordersRef, AdminOrders.class)
-            .build();
+                .setQuery(ordersRef, AdminOrders.class).build();
         FirebaseRecyclerAdapter<AdminOrders, AdminOrdersViewHolder> adapter =
-            new FirebaseRecyclerAdapter<AdminOrders, AdminOrdersViewHolder>(options) {
+                new FirebaseRecyclerAdapter<AdminOrders, AdminOrdersViewHolder>(options) {
+                    @Override
+                    protected void onBindViewHolder(@NonNull AdminOrdersViewHolder holder, @SuppressLint("RecyclerView") final int position, @NonNull final AdminOrders model) {
+                        holder.userName.setText("Name: "+model.getName());
+                        holder.userPhoneNumber.setText("Mobile: "+model.getPhone());
+                        holder.userTotalPrice.setText("Total Amount: Rs"+model.getTotalAmount());
+                        holder.userDateTime.setText("Order at: "+model.getDate()+":"+ model.getTime());
+                        holder.userShippingAddress.setText("Shipping Address: "+model.getAddress()+", "+model.getCity());
+                        holder.showOrdersBtn.setOnClickListener(new View.OnClickListener() {
+                            @Override
+                            public void onClick(View view) {
+                                String uID = getRef(position).getKey();
+                                Log.d("Step_name", "User order details view");
+                                Bundle bundle = new Bundle();
+                                bundle.putString("User_Name", String.valueOf(model.getName()));
+                                bundle.putString("User_PhoneNumber", String.valueOf(model.getPhone()));
+                                bundle.putString("User_Total_Price", String.valueOf(model.getTotalAmount()));
+                                bundle.putString("User_Order_Date", String.valueOf(model.getDate()));
+                                bundle.putString("User_Order_Time", String.valueOf(model.getTime()));
+                                bundle.putString("User_Shipping_Address", String.valueOf(model.getAddress()));
+                                bundle.putString("User_Shipping_City", String.valueOf(model.getCity()));
+                                mFirebaseAnalytics.logEvent("User_Details", bundle);
+                                HashMap cData = new HashMap<String, String>();
+                                cData.put("cd.UserName", String.valueOf(model.getName()));
+                                cData.put("cd.UserPhoneNumber", String.valueOf(model.getPhone()));
+                                cData.put("cd.UserTotalPrice", String.valueOf(model.getTotalAmount()));
+                                cData.put("cd.UserOrderDate", String.valueOf(model.getDate()));
+                                cData.put("cd.UserOrderTime", String.valueOf(model.getTime()));
+                                cData.put("cd.UserShipping_Address", String.valueOf(model.getAddress()));
+                                cData.put("cd.UserShippingCity", String.valueOf(model.getCity()));
+                                cData.put("cd.UserDetails", "User order details view");
+                                MobileCore.trackState("AdminNewOrdersScreen", cData);
+                                Intent intent = new Intent(AdminNewOrdersActivity.this,AdminUserProductsActivity.class);
+                                intent.putExtra("uid",uID);
+                                startActivity(intent);
+                            }
+                        });
 
-                @Override
-                protected void onBindViewHolder(@NonNull AdminOrdersViewHolder holder, @SuppressLint("RecyclerView") final int position, @NonNull final AdminOrders model) {
-                    holder.userName.setText("Name: "+model.getName());
-                    holder.userPhoneNumber.setText("Mobile: "+model.getPhone());
-                    holder.userTotalPrice.setText("Total Amount: Rs"+model.getTotalAmount());
-                    holder.userDateTime.setText("Order at: "+saveCurrentDate+":"+ saveCurrentTime);
-                    holder.userShippingAddress.setText("Shipping Address: "+model.getAddress()+", "+model.getCity());
-                    holder.showOrdersBtn.setOnClickListener(new View.OnClickListener() {
-                        @Override
-                        public void onClick(View view) {
-                            String uID = getRef(position).getKey();
-                            Log.d("Step_name", "User order details view");
-                            Bundle bundle = new Bundle();
-                            bundle.putString("User_Name", String.valueOf(model.getName()));
-                            bundle.putString("User_PhoneNumber", String.valueOf(model.getPhone()));
-                            bundle.putString("User_Total_Price", String.valueOf(model.getTotalAmount()));
-                            bundle.putString("User_Order_Date", String.valueOf(model.getDate()));
-                            bundle.putString("User_Order_Time", String.valueOf(model.getTime()));
-                            bundle.putString("User_Shipping_Address", String.valueOf(model.getAddress()));
-                            bundle.putString("User_Shipping_City", String.valueOf(model.getCity()));
-                            mFirebaseAnalytics.logEvent("User_Details", bundle);
-                            Intent intent = new Intent(AdminNewOrdersActivity.this,AdminUserProductsActivity.class);
-                            intent.putExtra("uid",uID);
-                            startActivity(intent);
-                        }
-                    });
-
-                    holder.itemView.setOnClickListener(new View.OnClickListener() {
-                        @Override
-                        public void onClick(View view) {
-                            CharSequence options[] =new CharSequence[]
-                                    {"Yes","No"};
-                            AlertDialog.Builder builder = new AlertDialog.Builder(AdminNewOrdersActivity.this);
-                            builder.setTitle("Have you shipped this order products?");
-                            builder.setItems(options, new DialogInterface.OnClickListener() {
-                                @Override
-                                public void onClick(DialogInterface dialogInterface, int i) {
-                                    if (i==0){
-                                        Log.d("Step_name", "Update order status");
-                                        Bundle bundle = new Bundle();
-                                        bundle.putString("Order_Status", "Update order status");
-                                        mFirebaseAnalytics.logEvent("Order_Status", bundle);
-                                        String uID = getRef(position).getKey();
-                                        RemoverOrder(uID);
+                        holder.itemView.setOnClickListener(new View.OnClickListener() {
+                            @Override
+                            public void onClick(View view) {
+                                CharSequence options[] =new CharSequence[]{"Yes","No"};
+                                AlertDialog.Builder builder = new AlertDialog.Builder(AdminNewOrdersActivity.this);
+                                builder.setTitle("Have you shipped this order products?");
+                                builder.setItems(options, new DialogInterface.OnClickListener() {
+                                    @Override
+                                    public void onClick(DialogInterface dialogInterface, int i) {
+                                        if (i==0){
+                                            Log.d("Step_name", "Update order status");
+                                            Bundle bundle = new Bundle();
+                                            bundle.putString("Order_Status", "Update order status");
+                                            mFirebaseAnalytics.logEvent("Order_Status", bundle);
+                                            HashMap cData = new HashMap<String, String>();
+                                            cData.put("cd.OrderStatus", "Update order status");
+                                            MobileCore.trackState("AdminNewOrdersScreen", cData);
+                                            String uID = getRef(position).getKey();
+                                            RemoverOrder(uID);
+                                        }
+                                        else {
+                                            Log.d("Step_name", "Order status not updated");
+                                            Bundle bundle = new Bundle();
+                                            bundle.putString("Order_Status", "Order status not updated");
+                                            mFirebaseAnalytics.logEvent("Order_Status", bundle);
+                                            HashMap cData = new HashMap<String, String>();
+                                            cData.put("cd.OrderStatus", "Order status not updated");
+                                            MobileCore.trackState("AdminNewOrdersScreen", cData);
+                                            finish();
+                                        }
                                     }
-                                    else {
-                                        Log.d("Step_name", "Order status not updated");
-                                        Bundle bundle = new Bundle();
-                                        bundle.putString("Order_Status", "Order status not updated");
-                                        mFirebaseAnalytics.logEvent("Order_Status", bundle);
-                                        finish();
-                                    }
-                                }
-                            });
-                            builder.show();
-                        }
-                    });
-                }
+                                });
+                                builder.show();
+                            }
+                        });
+                    }
 
-                @NonNull
-                @Override
-                public AdminOrdersViewHolder onCreateViewHolder(@NonNull ViewGroup parent, int viewType) {
-                    View view = LayoutInflater.from(parent.getContext()).inflate(R.layout.orders_layout,parent,false);
-                    return new AdminOrdersViewHolder(view);
-                }
-            };
+                    @NonNull
+                    @Override
+                    public AdminOrdersViewHolder onCreateViewHolder(@NonNull ViewGroup parent, int viewType) {
+                        View view = LayoutInflater.from(parent.getContext()).inflate(R.layout.orders_layout,parent,false);
+                        return new AdminOrdersViewHolder(view);
+                    }
+                };
         ordersList.setAdapter(adapter);
         adapter.startListening();
     }
@@ -145,6 +170,9 @@ public class AdminNewOrdersActivity extends AppCompatActivity {
         Bundle bundle = new Bundle();
         bundle.putString("Order_Status", "User Order Removed");
         mFirebaseAnalytics.logEvent("Order_Status", bundle);
+        HashMap cData = new HashMap<String, String>();
+        cData.put("cd.OrderStatus", "User Order Removed");
+        MobileCore.trackState("AdminNewOrdersScreen", cData);
         ordersRef.child(uID).removeValue();
     }
 }

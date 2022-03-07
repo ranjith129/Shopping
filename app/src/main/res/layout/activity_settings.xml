@@ -91,6 +91,8 @@
         android:textColor="#333333"
         android:textColorHint="#333333"
         android:background="@drawable/input_design"
+        android:cursorVisible="true"
+        android:textCursorDrawable="@null"
         />
 
     <EditText
@@ -105,6 +107,8 @@
         android:textColor="#333333"
         android:textColorHint="#333333"
         android:background="@drawable/input_design"
+        android:cursorVisible="true"
+        android:textCursorDrawable="@null"
         />
 
     <EditText
@@ -123,6 +127,8 @@
         android:overScrollMode="always"
         android:scrollbarStyle="insideInset"
         android:scrollbars="vertical"
-        android:lines="4"
+        android:lines="6"
+        android:cursorVisible="true"
+        android:textCursorDrawable="@null"
         />
 </RelativeLayout>

@@ -27,6 +27,18 @@ import com.google.firebase.database.DatabaseError;
 import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.FirebaseDatabase;
 import com.google.firebase.database.ValueEventListener;
+import com.adobe.marketing.mobile.AdobeCallback;
+import com.adobe.marketing.mobile.Analytics;
+import com.adobe.marketing.mobile.Identity;
+import com.adobe.marketing.mobile.InvalidInitException;
+import com.adobe.marketing.mobile.Lifecycle;
+import com.adobe.marketing.mobile.LoggingMode;
+import com.adobe.marketing.mobile.MobileCore;
+import com.adobe.marketing.mobile.Signal;
+import com.adobe.marketing.mobile.Target;
+import com.adobe.marketing.mobile.UserProfile;
+
+import java.util.HashMap;
 
 public class CartActivity extends AppCompatActivity{
     private RecyclerView recyclerView;
@@ -75,8 +87,8 @@ public class CartActivity extends AppCompatActivity{
         CheckOrderState();
         final DatabaseReference cartListRef = FirebaseDatabase.getInstance().getReference().child("Cart List");
         FirebaseRecyclerOptions<Cart> options = new FirebaseRecyclerOptions.Builder<Cart>()
-            .setQuery(cartListRef.child("User view")
-            .child(Prevalent.currentOnlineUser.getPhone()).child("Products"),Cart.class).build();
+                .setQuery(cartListRef.child("User view")
+                        .child(Prevalent.currentOnlineUser.getPhone()).child("Products"),Cart.class).build();
         FirebaseRecyclerAdapter<Cart, CartViewHolder> adapter = new FirebaseRecyclerAdapter<Cart, CartViewHolder>(options) {
             @Override
             protected void onBindViewHolder(@NonNull CartViewHolder holder, int position, @NonNull final Cart model) {
@@ -86,12 +98,11 @@ public class CartActivity extends AppCompatActivity{
                 holder.txtProductPrice.setText("Total Product Price: Rs"+FinalPrice);
                 int oneTyprProductTPrice = ((Integer.valueOf(model.getPrice())))* Integer.valueOf(model.getQuantity());
                 overTotalPrice = overTotalPrice + oneTyprProductTPrice;
-
                 holder.itemView.setOnClickListener(new View.OnClickListener() {
                     @Override
                     public void onClick(View view) {
                         CharSequence options[] = new CharSequence[]
-                            {"Edit","Remove"};
+                                {"Edit","Remove"};
                         AlertDialog.Builder builder = new AlertDialog.Builder(CartActivity.this);
                         builder.setTitle("Cart Options: ");
                         builder.setItems(options, new DialogInterface.OnClickListener() {
@@ -107,30 +118,41 @@ public class CartActivity extends AppCompatActivity{
                                     bundle.putString(FirebaseAnalytics.Param.ITEM_NAME, String.valueOf(model.getPname()));
                                     bundle.putString(FirebaseAnalytics.Param.QUANTITY, String.valueOf(model.getQuantity()));
                                     mFirebaseAnalytics.logEvent("Cart_Items_Edited", bundle);
+                                    HashMap cData = new HashMap<String, String>();
+                                    cData.put("cd.ProductID", String.valueOf(model.getPid()));
+                                    cData.put("cd.ProductName", String.valueOf(model.getPname()));
+                                    cData.put("cd.ProductPrice", String.valueOf(FinalPrice));
+                                    cData.put("cd.ProductsTotalPrice", String.valueOf(overTotalPrice));
+                                    cData.put("cd.ProductQuantity", String.valueOf(model.getQuantity()));
+                                    cData.put("cd.CartItemsEdited", "Cart item edit");
+                                    MobileCore.trackState("CartActivityScreen", cData);
                                     Intent intent = new Intent(CartActivity.this,ProductDetailsActivity.class);
                                     intent.putExtra("pid", model.getPid());
                                     startActivity(intent);
                                 }
                                 if (i==1){
                                     cartListRef.child("User view")
-                                        .child(Prevalent.currentOnlineUser.getPhone())
-                                        .child("Products")
-                                        .child(model.getPid())
-                                        .removeValue()
-                                        .addOnCompleteListener(new OnCompleteListener<Void>() {
-                                            @Override
-                                            public void onComplete(@NonNull Task<Void> task) {
-                                                if (task.isSuccessful()){
-                                                    Log.d("Step_name", "Cart Item removed");
-                                                    Bundle bundle = new Bundle();
-                                                    bundle.putString(FirebaseAnalytics.Param.METHOD, "Cart Item removed");
-                                                    mFirebaseAnalytics.logEvent("Cart_Item_Removed", bundle);
-                                                    Toast.makeText(CartActivity.this,"Item removed Successfully.",Toast.LENGTH_SHORT).show();
-                                                    Intent intent = new Intent(CartActivity.this,HomeActivity.class);
-                                                    startActivity(intent);
+                                            .child(Prevalent.currentOnlineUser.getPhone())
+                                            .child("Products")
+                                            .child(model.getPid())
+                                            .removeValue()
+                                            .addOnCompleteListener(new OnCompleteListener<Void>() {
+                                                @Override
+                                                public void onComplete(@NonNull Task<Void> task) {
+                                                    if (task.isSuccessful()){
+                                                        Log.d("Step_name", "Cart Item removed");
+                                                        Bundle bundle = new Bundle();
+                                                        bundle.putString(FirebaseAnalytics.Param.METHOD, "Cart Item removed");
+                                                        mFirebaseAnalytics.logEvent("Cart_Item_Removed", bundle);
+                                                        HashMap cData = new HashMap<String, String>();
+                                                        cData.put("cd.CartItemRemoved", "Cart Item removed");
+                                                        MobileCore.trackState("CartActivityScreen", cData);
+                                                        Toast.makeText(CartActivity.this,"Item removed Successfully.",Toast.LENGTH_SHORT).show();
+                                                        Intent intent = new Intent(CartActivity.this,HomeActivity.class);
+                                                        startActivity(intent);
+                                                    }
                                                 }
-                                            }
-                                        });
+                                            });
                                 }
                             }
                         });
@@ -172,6 +194,9 @@ public class CartActivity extends AppCompatActivity{
                         Bundle bundle = new Bundle();
                         bundle.putString(FirebaseAnalytics.Param.METHOD, "Product order is shipped");
                         mFirebaseAnalytics.logEvent("Product_Shipped", bundle);
+                        HashMap cData = new HashMap<String, String>();
+                        cData.put("cd.ProductShipped", "Product order is shipped");
+                        MobileCore.trackState("CartActivityScreen", cData);
                     }
                     else if (shippingState.equals("Not Shipped")){
                         txtTotalAmount.setText("Shipping State = Not Shipped");
@@ -183,6 +208,9 @@ public class CartActivity extends AppCompatActivity{
                         Bundle bundle = new Bundle();
                         bundle.putString(FirebaseAnalytics.Param.METHOD, "Cart Item Not Shipped");
                         mFirebaseAnalytics.logEvent("Product_Items_NotShipped", bundle);
+                        HashMap cData = new HashMap<String, String>();
+                        cData.put("cd.ProductItemsNotShipped", "Cart Item Not Shipped");
+                        MobileCore.trackState("CartActivityScreen", cData);
                     }
                 }
             }
@@ -193,6 +221,9 @@ public class CartActivity extends AppCompatActivity{
                 Bundle bundle = new Bundle();
                 bundle.putString(FirebaseAnalytics.Param.METHOD, "Cart Item Cancelled");
                 mFirebaseAnalytics.logEvent("Cart_Items_Cancelled", bundle);
+                HashMap cData = new HashMap<String, String>();
+                cData.put("cd.CartItemsCancelled", "Cart Item Cancelled");
+                MobileCore.trackState("CartActivityScreen", cData);
             }
         });
     }

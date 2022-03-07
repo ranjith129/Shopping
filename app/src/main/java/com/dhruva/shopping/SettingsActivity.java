@@ -1,5 +1,4 @@
 package com.dhruva.shopping;
-
 import android.app.ProgressDialog;
 import android.content.Intent;
 import android.net.Uri;
@@ -10,10 +9,8 @@ import android.view.View;
 import android.widget.EditText;
 import android.widget.TextView;
 import android.widget.Toast;
-
 import androidx.annotation.NonNull;
 import androidx.appcompat.app.AppCompatActivity;
-
 import com.dhruva.shopping.Prevalent.Prevalent;
 import com.google.android.gms.tasks.Continuation;
 import com.google.android.gms.tasks.OnCompleteListener;
@@ -29,10 +26,18 @@ import com.google.firebase.storage.StorageReference;
 import com.google.firebase.storage.StorageTask;
 import com.squareup.picasso.Picasso;
 import com.theartofdev.edmodo.cropper.CropImage;
-
 import java.util.HashMap;
-
 import de.hdodenhof.circleimageview.CircleImageView;
+import com.adobe.marketing.mobile.AdobeCallback;
+import com.adobe.marketing.mobile.Analytics;
+import com.adobe.marketing.mobile.Identity;
+import com.adobe.marketing.mobile.InvalidInitException;
+import com.adobe.marketing.mobile.Lifecycle;
+import com.adobe.marketing.mobile.LoggingMode;
+import com.adobe.marketing.mobile.MobileCore;
+import com.adobe.marketing.mobile.Signal;
+import com.adobe.marketing.mobile.Target;
+import com.adobe.marketing.mobile.UserProfile;
 
 public class SettingsActivity extends AppCompatActivity {
     private CircleImageView profileImageView;
@@ -73,8 +78,15 @@ public class SettingsActivity extends AppCompatActivity {
                 bundle.putString("Profile_Image", String.valueOf(profileImageView));
                 bundle.putString("Profile_FullName", String.valueOf(fullNameEditText));
                 bundle.putString("Profile_PhoneNumber", String.valueOf(userPhoneEditText));
-                bundle.putString("Product_Address", String.valueOf(addressEditText));
+                bundle.putString("Profile_Address", String.valueOf(addressEditText));
                 mFirebaseAnalytics.logEvent("ProfileUpdate_Closed", bundle);
+                HashMap cData = new HashMap<String, String>();
+                cData.put("cd.ProfileImage", String.valueOf(profileImageView));
+                cData.put("cd.ProfileFullName", String.valueOf(fullNameEditText));
+                cData.put("cd.ProfilePhoneNumber", String.valueOf(userPhoneEditText));
+                cData.put("cd.ProfileAddress", String.valueOf(addressEditText));
+                cData.put("cd.ProfileUpdateClosed", "Setting changes closed");
+                MobileCore.trackState("SettingScreen", cData);
                 finish();
             }
         });
@@ -91,8 +103,15 @@ public class SettingsActivity extends AppCompatActivity {
                     bundle.putString("Profile_Image", String.valueOf(profileImageView));
                     bundle.putString("Profile_FullName", String.valueOf(fullNameEditText));
                     bundle.putString("Profile_PhoneNumber", String.valueOf(userPhoneEditText));
-                    bundle.putString("Product_Address", String.valueOf(addressEditText));
+                    bundle.putString("Profile_Address", String.valueOf(addressEditText));
                     mFirebaseAnalytics.logEvent("Profile_Saved", bundle);
+                    HashMap cData = new HashMap<String, String>();
+                    cData.put("cd.ProfileImage", String.valueOf(profileImageView));
+                    cData.put("cd.ProfileFullName", String.valueOf(fullNameEditText));
+                    cData.put("cd.ProfilePhoneNumber", String.valueOf(userPhoneEditText));
+                    cData.put("cd.ProfileAddress", String.valueOf(addressEditText));
+                    cData.put("cd.ProfileSaved", "User information Saved");
+                    MobileCore.trackState("SettingScreen", cData);
                     userInfoSaved();
                 }
                 else
@@ -103,8 +122,15 @@ public class SettingsActivity extends AppCompatActivity {
                     bundle.putString("Profile_Image", String.valueOf(profileImageView));
                     bundle.putString("Profile_FullName", String.valueOf(fullNameEditText));
                     bundle.putString("Profile_PhoneNumber", String.valueOf(userPhoneEditText));
-                    bundle.putString("Product_Address", String.valueOf(addressEditText));
+                    bundle.putString("Profile_Address", String.valueOf(addressEditText));
                     mFirebaseAnalytics.logEvent("Profile_Updated", bundle);
+                    HashMap cData = new HashMap<String, String>();
+                    cData.put("cd.ProfileImage", String.valueOf(profileImageView));
+                    cData.put("cd.ProfileFullName", String.valueOf(fullNameEditText));
+                    cData.put("cd.ProfilePhoneNumber", String.valueOf(userPhoneEditText));
+                    cData.put("cd.ProfileAddress", String.valueOf(addressEditText));
+                    cData.put("cd.ProfileUpdated", "User information updated");
+                    MobileCore.trackState("SettingScreen", cData);
                     updateOnlyUserInfo();
                 }
             }
@@ -120,8 +146,15 @@ public class SettingsActivity extends AppCompatActivity {
                 bundle.putString("Profile_Image", String.valueOf(profileImageView));
                 bundle.putString("Profile_FullName", String.valueOf(fullNameEditText));
                 bundle.putString("Profile_PhoneNumber", String.valueOf(userPhoneEditText));
-                bundle.putString("Product_Address", String.valueOf(addressEditText));
+                bundle.putString("Profile_Address", String.valueOf(addressEditText));
                 mFirebaseAnalytics.logEvent("Profile_ImageChanges_Updated", bundle);
+                HashMap cData = new HashMap<String, String>();
+                cData.put("cd.ProfileImage", String.valueOf(profileImageView));
+                cData.put("cd.ProfileFullName", String.valueOf(fullNameEditText));
+                cData.put("cd.ProfilePhoneNumber", String.valueOf(userPhoneEditText));
+                cData.put("cd.ProfileAddress", String.valueOf(addressEditText));
+                cData.put("cd.ProfileImageChangesUpdated", "Profile Image Changes updated");
+                MobileCore.trackState("SettingScreen", cData);
                 checker = "clicked";
                 CropImage.activity(imageUri).setAspectRatio(1, 1).start(SettingsActivity.this);
             }
@@ -142,6 +175,12 @@ public class SettingsActivity extends AppCompatActivity {
         bundle.putString("User_PhoneNumber", String.valueOf(userPhoneEditText));
         bundle.putString("User_Address", String.valueOf(addressEditText));
         mFirebaseAnalytics.logEvent("UserProfile_Information_Updated", bundle);
+        HashMap cData = new HashMap<String, String>();
+        cData.put("cd.UserFullName", String.valueOf(fullNameEditText));
+        cData.put("cd.UserPhoneNumber", String.valueOf(userPhoneEditText));
+        cData.put("cd.UserAddress", String.valueOf(addressEditText));
+        cData.put("cd.UserProfileInformationUpdated", "User Information updated successfully");
+        MobileCore.trackState("SettingScreen", cData);
         startActivity(new Intent(SettingsActivity.this, HomeActivity.class));
         Toast.makeText(SettingsActivity.this, "Profile Info update successfully.", Toast.LENGTH_SHORT).show();
         finish();
@@ -160,6 +199,9 @@ public class SettingsActivity extends AppCompatActivity {
             Bundle bundle = new Bundle();
             bundle.putString(FirebaseAnalytics.Param.METHOD, "Profile image view done");
             mFirebaseAnalytics.logEvent("Profile_ImageView", bundle);
+            HashMap cData = new HashMap<String, String>();
+            cData.put("cd.ProfileImageView", "Profile image view done");
+            MobileCore.trackState("SettingScreen", cData);
             startActivity(new Intent(SettingsActivity.this, HomeActivity.class));
         }
         else
@@ -168,6 +210,9 @@ public class SettingsActivity extends AppCompatActivity {
             Bundle bundle = new Bundle();
             bundle.putString(FirebaseAnalytics.Param.METHOD, "Profile image update failure");
             mFirebaseAnalytics.logEvent("ProfileImage_UpdateFailure", bundle);
+            HashMap cData = new HashMap<String, String>();
+            cData.put("cd.ProfileImageUpdateFailure", "Profile image update failure");
+            MobileCore.trackState("SettingScreen", cData);
             Toast.makeText(this, "Error, Try Again after some time.", Toast.LENGTH_SHORT).show();
             startActivity(new Intent(SettingsActivity.this, SettingsActivity.class));
             finish();
@@ -182,6 +227,9 @@ public class SettingsActivity extends AppCompatActivity {
             Bundle bundle = new Bundle();
             bundle.putString(FirebaseAnalytics.Param.METHOD, "Profile Name is mandatory");
             mFirebaseAnalytics.logEvent("Profile_Name_Error", bundle);
+            HashMap cData = new HashMap<String, String>();
+            cData.put("cd.ProfileNameError", "Profile Name is mandatory");
+            MobileCore.trackState("SettingScreen", cData);
             Toast.makeText(this, "Name is mandatory.", Toast.LENGTH_SHORT).show();
         }
         else if (TextUtils.isEmpty(addressEditText.getText().toString()))
@@ -190,6 +238,9 @@ public class SettingsActivity extends AppCompatActivity {
             Bundle bundle = new Bundle();
             bundle.putString(FirebaseAnalytics.Param.METHOD, "Profile Address is mandatory");
             mFirebaseAnalytics.logEvent("Profile_Address_Error", bundle);
+            HashMap cData = new HashMap<String, String>();
+            cData.put("cd.ProfileAddressError", "Profile Address is mandatory");
+            MobileCore.trackState("SettingScreen", cData);
             Toast.makeText(this, "Address is mandatory.", Toast.LENGTH_SHORT).show();
         }
         else if (TextUtils.isEmpty(userPhoneEditText.getText().toString()))
@@ -198,6 +249,9 @@ public class SettingsActivity extends AppCompatActivity {
             Bundle bundle = new Bundle();
             bundle.putString(FirebaseAnalytics.Param.METHOD, "Profile Phone Number is mandatory");
             mFirebaseAnalytics.logEvent("Profile_PhoneNumber_Error", bundle);
+            HashMap cData = new HashMap<String, String>();
+            cData.put("cd.ProfilePhoneNumberError", "Profile Phone Number is mandatory");
+            MobileCore.trackState("SettingScreen", cData);
             Toast.makeText(this, "Phone Number is mandatory.", Toast.LENGTH_SHORT).show();
         }
         else if(checker.equals("clicked"))
@@ -206,6 +260,9 @@ public class SettingsActivity extends AppCompatActivity {
             Bundle bundle = new Bundle();
             bundle.putString(FirebaseAnalytics.Param.METHOD, "User Information updated Succeed");
             mFirebaseAnalytics.logEvent("Profile_Updated_Error", bundle);
+            HashMap cData = new HashMap<String, String>();
+            cData.put("cd.ProfileUpdatedError", "User Information updated Succeed");
+            MobileCore.trackState("SettingScreen", cData);
             uploadImage();
         }
     }
@@ -231,6 +288,9 @@ public class SettingsActivity extends AppCompatActivity {
                     Bundle bundle = new Bundle();
                     bundle.putString(FirebaseAnalytics.Param.METHOD, "Profile Information image update");
                     mFirebaseAnalytics.logEvent("Profile_ImageUpdate", bundle);
+                    HashMap cData = new HashMap<String, String>();
+                    cData.put("cd.ProfileImageUpdate", "Profile Information image update");
+                    MobileCore.trackState("SettingScreen", cData);
                     return fileRef.getDownloadUrl();
                 }
             }).addOnCompleteListener(new OnCompleteListener<Uri>() {
@@ -256,15 +316,25 @@ public class SettingsActivity extends AppCompatActivity {
                         bundle.putString("User_Address", String.valueOf(addressEditText));
                         bundle.putString("User_ImageUrl", String.valueOf(myUrl));
                         mFirebaseAnalytics.logEvent("Profile_Updated_Succeed", bundle);
+                        HashMap cData = new HashMap<String, String>();
+                        cData.put("cd.UserFullName", String.valueOf(fullNameEditText));
+                        cData.put("cd.UserPhoneNumber", String.valueOf(userPhoneEditText));
+                        cData.put("cd.UserAddress", String.valueOf(addressEditText));
+                        cData.put("cd.UserImageUrl", String.valueOf(myUrl));
+                        cData.put("cd.ProfileUpdatedSucceed", "Profile Info update successfully");
+                        MobileCore.trackState("SettingScreen", cData);
                         Toast.makeText(SettingsActivity.this, "Profile Info update successfully.", Toast.LENGTH_SHORT).show();
                         finish();
                     }
                     else{
                         progressDialog.dismiss();
-                        Log.d("Step_name", "Profile Information update failure - A");
+                        Log.d("Step_name", "Profile Information update failure");
                         Bundle bundle = new Bundle();
                         bundle.putString(FirebaseAnalytics.Param.METHOD, "Profile Information updated failure");
                         mFirebaseAnalytics.logEvent("Profile_Updated_Failure", bundle);
+                        HashMap cData = new HashMap<String, String>();
+                        cData.put("cd.ProfileUpdatedFailure", "Profile Information updated failure");
+                        MobileCore.trackState("SettingScreen", cData);
                         Toast.makeText(SettingsActivity.this, "Error. Try some other time later", Toast.LENGTH_SHORT).show();
                     }
                 }
@@ -276,6 +346,9 @@ public class SettingsActivity extends AppCompatActivity {
             Bundle bundle = new Bundle();
             bundle.putString(FirebaseAnalytics.Param.METHOD, "Profile Image is not selected");
             mFirebaseAnalytics.logEvent("ProfileImage_NotSelected", bundle);
+            HashMap cData = new HashMap<String, String>();
+            cData.put("cd.ProfileImageNotSelected", "Profile Image is not selected");
+            MobileCore.trackState("SettingScreen", cData);
             Toast.makeText(this, "Image is not selected.", Toast.LENGTH_SHORT).show();
         }
     }
@@ -300,12 +373,19 @@ public class SettingsActivity extends AppCompatActivity {
                         addressEditText.setText(address);
                         Log.d("Step_name", "Profile Image viewing");
                         Bundle bundle = new Bundle();
-                        bundle.putString(FirebaseAnalytics.Param.METHOD, "User Information updated");
+                        bundle.putString(FirebaseAnalytics.Param.METHOD, "User Information viewing");
                         bundle.putString("User_FullName", String.valueOf(fullNameEditText));
                         bundle.putString("User_PhoneNumber", String.valueOf(userPhoneEditText));
                         bundle.putString("User_Address", String.valueOf(addressEditText));
                         bundle.putString("User_ImageUrl", String.valueOf(imageUri));
                         mFirebaseAnalytics.logEvent("Profile_Displayed", bundle);
+                        HashMap cData = new HashMap<String, String>();
+                        cData.put("cd.UserFullName", String.valueOf(fullNameEditText));
+                        cData.put("cd.UserPhoneNumber", String.valueOf(userPhoneEditText));
+                        cData.put("cd.UserAddress", String.valueOf(addressEditText));
+                        cData.put("cd.UserImageUrl", String.valueOf(imageUri));
+                        cData.put("cd.ProfileDisplayed", "User Profile Information viewing");
+                        MobileCore.trackState("SettingScreen", cData);
                     }
                 }
             }
@@ -316,6 +396,9 @@ public class SettingsActivity extends AppCompatActivity {
                 Bundle bundle = new Bundle();
                 bundle.putString(FirebaseAnalytics.Param.METHOD, "Profile updated cancelled");
                 mFirebaseAnalytics.logEvent("ProfileUpdated_Cancelled", bundle);
+                HashMap cData = new HashMap<String, String>();
+                cData.put("cd.ProfileUpdatedCancelled", "Profile updated cancelled");
+                MobileCore.trackState("SettingScreen", cData);
             }
         });
     }

@@ -35,6 +35,8 @@
         android:textColorHint="#333333"
         android:textAlignment="gravity"
         android:textSize="16dp"
+        android:cursorVisible="true"
+        android:textCursorDrawable="@null"
         />
 
 
@@ -50,7 +52,7 @@
         android:gravity="top|left"
         android:hint="Product Description"
         android:inputType="textMultiLine"
-        android:lines="4"
+        android:lines="6"
         android:overScrollMode="always"
         android:padding="15dp"
         android:scrollbarStyle="insideInset"
@@ -58,7 +60,10 @@
         android:textAlignment="gravity"
         android:textColor="#333333"
         android:textColorHint="#333333"
-        android:textSize="16dp" />
+        android:textSize="16dp"
+        android:cursorVisible="true"
+        android:textCursorDrawable="@null"
+        />
 
     <EditText
         android:id="@+id/product_price"
@@ -76,6 +81,8 @@
         android:textColorHint="#333333"
         android:textAlignment="gravity"
         android:textSize="16dp"
+        android:cursorVisible="true"
+        android:textCursorDrawable="@null"
         />
 
     <Button

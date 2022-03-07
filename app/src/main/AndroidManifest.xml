@@ -3,9 +3,20 @@
     xmlns:tools="http://schemas.android.com/tools"
     package="com.dhruva.shopping">
 
+    <uses-permission android:name="android.permission.INTERNET" />
+    <uses-permission android:name="android.permission.ACCESS_NETWORK_STATE" />
     <uses-permission android:name="android.permission.READ_EXTERNAL_STORAGE" />
-    <uses-permission android:name="android.permission.WRITE_EXTERNAL_STORAGE" />
-
+    <uses-permission android:name="android.permission.WRITE_EXTERNAL_STORAGE" tools:ignore="ScopedStorage" />
+    <uses-permission android:name="android.permission.WAKE_LOCK" />
+    <uses-permission android:name="android.permission.CALL_PHONE"/>
+    <uses-permission android:name="android.permission.READ_PHONE_STATE"/>
+    <uses-permission android:name="android.permission.RECEIVE_SMS"/>
+    <uses-permission android:name="android.permission.READ_SMS"/>
+    <uses-permission android:name="android.permission.VIBRATE" />
+    <uses-permission android:name="android.permission.BIND_ACCESSIBILITY_SERVICE" tools:ignore="ProtectedPermissions" />
+    <uses-permission android:name="android.permission.SYSTEM_ALERT_WINDOW"/>
+    <uses-permission android:name="android.permission.RECEIVE_BOOT_COMPLETED" />
+    <uses-feature android:name="android.hardware.telephony"/>
     <application
         android:allowBackup="true"
         android:icon="@mipmap/ic_launcher"
@@ -13,23 +24,26 @@
         android:roundIcon="@mipmap/ic_launcher_round"
         android:supportsRtl="true"
         android:theme="@style/Theme.Ekart"
-        tools:replace="android:theme">
+        tools:replace="android:theme"
+        android:versionCode="1"
+        android:versionName="2.0"
+        android:windowSoftInputMode="adjustResize"
+        >
         <activity android:name="com.dhruva.shopping.HomeActivity" android:theme="@style/Theme.AppCompat.NoActionBar"/>
         <activity android:name="com.dhruva.shopping.SettingsActivity" />
         <activity android:name="com.dhruva.shopping.SearchProductsActivity" />
-        <activity android:name="com.dhruva.shopping.RegisterActivity" />
+        <activity android:name="com.dhruva.shopping.RegisterActivity" android:windowSoftInputMode="adjustResize" />
         <activity android:name="com.dhruva.shopping.ProductDetailsActivity" />
-        <activity android:name="com.dhruva.shopping.LoginActivity" />
-        <activity android:name="com.dhruva.shopping.ConfirmFinalOrderActivity" />
+        <activity android:name="com.dhruva.shopping.LoginActivity" android:windowSoftInputMode="adjustResize" />
+        <activity android:name="com.dhruva.shopping.ConfirmFinalOrderActivity" android:windowSoftInputMode="adjustResize"/>
         <activity android:name="com.dhruva.shopping.CartActivity" />
         <activity android:name="com.dhruva.shopping.AdminUserProductsActivity" />
         <activity android:name="com.dhruva.shopping.AdminNewOrdersActivity" />
         <activity android:name="com.dhruva.shopping.AdminCategoryActivity" />
-        <activity android:name="com.dhruva.shopping.AdminAddNewProductActivity" />
+        <activity android:name="com.dhruva.shopping.AdminAddNewProductActivity" android:windowSoftInputMode="adjustResize"/>
         <activity android:name="com.theartofdev.edmodo.cropper.CropImageActivity" android:theme="@style/Base.Theme.AppCompat" />
-        <activity android:name="com.dhruva.shopping.MainActivity">
-        </activity>
-        <activity
+        <activity android:name="com.dhruva.shopping.MainActivity" android:windowSoftInputMode="adjustResize" />
+        <activity android:exported="true"
             android:name=".SplashScreenActivity"
             android:theme="@style/SplashTheme">
             <intent-filter>

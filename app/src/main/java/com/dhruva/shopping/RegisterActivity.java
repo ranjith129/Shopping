@@ -5,6 +5,7 @@ import android.os.Bundle;
 import android.text.TextUtils;
 import android.util.Log;
 import android.view.View;
+import android.view.WindowManager;
 import android.widget.Button;
 import android.widget.EditText;
 import android.widget.Toast;
@@ -19,6 +20,16 @@ import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.FirebaseDatabase;
 import com.google.firebase.database.ValueEventListener;
 import java.util.HashMap;
+import com.adobe.marketing.mobile.AdobeCallback;
+import com.adobe.marketing.mobile.Analytics;
+import com.adobe.marketing.mobile.Identity;
+import com.adobe.marketing.mobile.InvalidInitException;
+import com.adobe.marketing.mobile.Lifecycle;
+import com.adobe.marketing.mobile.LoggingMode;
+import com.adobe.marketing.mobile.MobileCore;
+import com.adobe.marketing.mobile.Signal;
+import com.adobe.marketing.mobile.Target;
+import com.adobe.marketing.mobile.UserProfile;
 
 public class RegisterActivity extends AppCompatActivity {
     private Button CreateAccountButton;
@@ -30,6 +41,7 @@ public class RegisterActivity extends AppCompatActivity {
         if (getSupportActionBar() != null) {
             getSupportActionBar().hide();
         }
+        getWindow().setSoftInputMode(WindowManager.LayoutParams.SOFT_INPUT_STATE_VISIBLE| WindowManager.LayoutParams.SOFT_INPUT_ADJUST_RESIZE);
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_register);
         mFirebaseAnalytics = FirebaseAnalytics.getInstance(this);
@@ -56,13 +68,20 @@ public class RegisterActivity extends AppCompatActivity {
             Bundle bundle = new Bundle();
             bundle.putString(FirebaseAnalytics.Param.METHOD, "Error: Please enter your name");
             mFirebaseAnalytics.logEvent("SignUp_EnterName_Error", bundle);
+            HashMap cData = new HashMap<String, String>();
+            cData.put("cd.SignUpEnterNameError", "Please enter your name");
+            MobileCore.trackState("SignUpScreen", cData);
         }
-        else if (!name.matches("^[a-zA-Z\\\\s]{5,30}$")) {
+        //Reg exp: "^[a-zA-Z\\\\s]{5,30}$"
+        else if (!name.matches("^(?!\\s)(?![\\s\\S]*\\s$)[a-zA-Z\\s]{5,30}$")) {
             Log.d("Step_name", "Enter valid name");
             Toast.makeText(this, "Please enter valid name. Name Hint: Xerago/xerago/XeRaGo likewise with minimum 5 characters to maximum 30 characters", Toast.LENGTH_SHORT).show();
             Bundle bundle = new Bundle();
             bundle.putString(FirebaseAnalytics.Param.METHOD, "Error: Please enter valid name");
             mFirebaseAnalytics.logEvent("SignUp_EnterName_ValidError", bundle);
+            HashMap cData = new HashMap<String, String>();
+            cData.put("cd.SignUpEnterNameValidError", "Please enter valid name");
+            MobileCore.trackState("SignUpScreen", cData);
         }
         else if (TextUtils.isEmpty(phone))
         {
@@ -70,6 +89,9 @@ public class RegisterActivity extends AppCompatActivity {
             Bundle bundle = new Bundle();
             bundle.putString(FirebaseAnalytics.Param.METHOD, "Error: Please enter your phone number");
             mFirebaseAnalytics.logEvent("SignUp_PhoneNumber_Error", bundle);
+            HashMap cData = new HashMap<String, String>();
+            cData.put("cd.SignUpPhoneNumberError", "Please enter your phone number");
+            MobileCore.trackState("SignUpScreen", cData);
             Toast.makeText(this, "Please enter your phone number.", Toast.LENGTH_SHORT).show();
         }
         else if (!phone.matches("^[6-9]{1}[0-9]{9}$")) {
@@ -77,6 +99,9 @@ public class RegisterActivity extends AppCompatActivity {
             Bundle bundle = new Bundle();
             bundle.putString(FirebaseAnalytics.Param.METHOD, "Error: Enter valid phone number");
             mFirebaseAnalytics.logEvent("SignUp_PhoneNumber_ValidError", bundle);
+            HashMap cData = new HashMap<String, String>();
+            cData.put("cd.SignUpPhoneNumberValidError", "Enter valid phone number");
+            MobileCore.trackState("SignUpScreen", cData);
             Toast.makeText(this, "Please enter valid phone number. Phone number Hint: First number start only with 6-9 maximum 10 digit", Toast.LENGTH_SHORT).show();
         }
         else if (TextUtils.isEmpty(password))
@@ -85,6 +110,9 @@ public class RegisterActivity extends AppCompatActivity {
             Bundle bundle = new Bundle();
             bundle.putString(FirebaseAnalytics.Param.METHOD, "Error: Please enter your password");
             mFirebaseAnalytics.logEvent("SignUp_EnterPassword_Error", bundle);
+            HashMap cData = new HashMap<String, String>();
+            cData.put("cd.SignUpEnterPasswordError", "Please enter your password");
+            MobileCore.trackState("SignUpScreen", cData);
             Toast.makeText(this, "Please enter your password.", Toast.LENGTH_SHORT).show();
         }
         else if (!password.matches("^(?=.*\\d)(?=.*[a-z])(?=.*[A-Z])(?=.*[~!@#$%^&*-+=()])[^\\s]{8,20}$")) {
@@ -92,6 +120,9 @@ public class RegisterActivity extends AppCompatActivity {
             Bundle bundle = new Bundle();
             bundle.putString(FirebaseAnalytics.Param.METHOD, "Error: Enter valid password");
             mFirebaseAnalytics.logEvent("SignUp_EnterPassword_ValidError", bundle);
+            HashMap cData = new HashMap<String, String>();
+            cData.put("cd.SignUpEnterPasswordValidError", "Enter valid password");
+            MobileCore.trackState("SignUpScreen", cData);
             Toast.makeText(this, "Please enter valid password. Password Hint: Password required combined with following all one digit/lower/upper/special character with maximum 8 to 20 characters", Toast.LENGTH_SHORT).show();
         }
         else
@@ -102,6 +133,9 @@ public class RegisterActivity extends AppCompatActivity {
             Bundle bundle = new Bundle();
             bundle.putString(FirebaseAnalytics.Param.METHOD, "Message: Your account created.");
             mFirebaseAnalytics.logEvent(FirebaseAnalytics.Event.SIGN_UP, bundle);
+            HashMap cData = new HashMap<String, String>();
+            cData.put("cd.AccountCreated", "Your account created");
+            MobileCore.trackState("SignUpScreen", cData);
             loadingBar.setCanceledOnTouchOutside(false);
             loadingBar.show();
             ValidatephoneNumber(name, phone, password);
@@ -131,6 +165,9 @@ public class RegisterActivity extends AppCompatActivity {
                                 Bundle bundle = new Bundle();
                                 bundle.putString(FirebaseAnalytics.Param.METHOD, "Message: User account created.");
                                 mFirebaseAnalytics.logEvent("Signup_UserAccount_Created", bundle);
+                                HashMap cData = new HashMap<String, String>();
+                                cData.put("cd.SignupUserAccountCreated", "User account created");
+                                MobileCore.trackState("SignUpScreen", cData);
                                 Intent intent = new Intent(RegisterActivity.this, com.dhruva.shopping.LoginActivity.class);
                                 startActivity(intent);
                             }
@@ -141,6 +178,9 @@ public class RegisterActivity extends AppCompatActivity {
                                 Bundle bundle = new Bundle();
                                 bundle.putString(FirebaseAnalytics.Param.METHOD, "Error: Account creation failed.");
                                 mFirebaseAnalytics.logEvent("Signup_UserAccount_CreationFailed", bundle);
+                                HashMap cData = new HashMap<String, String>();
+                                cData.put("cd.SignupUserAccountCreationFailed", "Account creation failed");
+                                MobileCore.trackState("SignUpScreen", cData);
                                 Toast.makeText(RegisterActivity.this, "Network Error: Please try again after some time.", Toast.LENGTH_SHORT).show();
                             }
                         }
@@ -153,6 +193,9 @@ public class RegisterActivity extends AppCompatActivity {
                     Bundle bundle = new Bundle();
                     bundle.putString(FirebaseAnalytics.Param.METHOD, "Error: Account Phone number already exists");
                     mFirebaseAnalytics.logEvent("Signup_PhoneNumber_AlreadyExists", bundle);
+                    HashMap cData = new HashMap<String, String>();
+                    cData.put("cd.SignupPhoneNumberAlreadyExists", "Account Phone number already exists");
+                    MobileCore.trackState("SignUpScreen", cData);
                     //Toast.makeText(RegisterActivity.this, "Please try again using another phone number.", Toast.LENGTH_SHORT).show();
                     Intent intent = new Intent(RegisterActivity.this, com.dhruva.shopping.MainActivity.class);
                     startActivity(intent);
@@ -165,6 +208,9 @@ public class RegisterActivity extends AppCompatActivity {
                 Bundle bundle = new Bundle();
                 bundle.putString(FirebaseAnalytics.Param.METHOD, "Message: New Account Creation Cancelled");
                 mFirebaseAnalytics.logEvent("Signup_Cancelled", bundle);
+                HashMap cData = new HashMap<String, String>();
+                cData.put("cd.SignupCancelled", "New Account Creation Cancelled");
+                MobileCore.trackState("SignUpScreen", cData);
             }
         });
     }

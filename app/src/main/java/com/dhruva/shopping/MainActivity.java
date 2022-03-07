@@ -11,6 +11,7 @@ import androidx.annotation.NonNull;
 import androidx.appcompat.app.AppCompatActivity;
 import com.dhruva.shopping.Model.Users;
 import com.dhruva.shopping.Prevalent.Prevalent;
+import com.google.ar.core.Config;
 import com.google.firebase.analytics.FirebaseAnalytics;
 import com.google.firebase.database.DataSnapshot;
 import com.google.firebase.database.DatabaseError;
@@ -18,6 +19,27 @@ import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.FirebaseDatabase;
 import com.google.firebase.database.ValueEventListener;
 import io.paperdb.Paper;
+import com.adobe.marketing.mobile.AdobeCallback;
+import com.adobe.marketing.mobile.Analytics;
+import com.adobe.marketing.mobile.Identity;
+import com.adobe.marketing.mobile.InvalidInitException;
+import com.adobe.marketing.mobile.Lifecycle;
+import com.adobe.marketing.mobile.LoggingMode;
+import com.adobe.marketing.mobile.MobileCore;
+import com.adobe.marketing.mobile.Signal;
+import com.adobe.marketing.mobile.Target;
+import com.adobe.marketing.mobile.UserProfile;
+import java.util.HashMap;
+import com.adobe.marketing.mobile.AdobeCallback;
+import com.adobe.marketing.mobile.Analytics;
+import com.adobe.marketing.mobile.Identity;
+import com.adobe.marketing.mobile.InvalidInitException;
+import com.adobe.marketing.mobile.Lifecycle;
+import com.adobe.marketing.mobile.LoggingMode;
+import com.adobe.marketing.mobile.MobileCore;
+import com.adobe.marketing.mobile.Signal;
+import com.adobe.marketing.mobile.Target;
+import com.adobe.marketing.mobile.UserProfile;
 
 public class MainActivity extends AppCompatActivity {
     private Button joinNowButton, loginButton;
@@ -30,6 +52,8 @@ public class MainActivity extends AppCompatActivity {
             getSupportActionBar().hide();
         }
         super.onCreate(savedInstanceState);
+        MobileCore.setApplication(getApplication());
+        MobileCore.setLogLevel(LoggingMode.DEBUG);
         mFirebaseAnalytics = FirebaseAnalytics.getInstance(this);
         setContentView(R.layout.activity_main);
         joinNowButton = (Button) findViewById(R.id.main_join_now_btn);
@@ -39,6 +63,26 @@ public class MainActivity extends AppCompatActivity {
         Log.d("Step_name", "Application Started");
         Bundle bundle = new Bundle();
         bundle.putString("App_Open", "Application Opened");
+        HashMap cData = new HashMap<String, String>();
+        cData.put("cd.AppOpened", "Main Activity");
+
+        try{
+            Target.registerExtension();
+            Analytics.registerExtension();
+            Identity.registerExtension();
+            Lifecycle.registerExtension();
+            Signal.registerExtension();
+            UserProfile.registerExtension();
+            MobileCore.start(new AdobeCallback () {
+                @Override
+                public void call(Object o) {
+                    MobileCore.configureWithAppID("4fa03d1212c6/eac0d963ebae/launch-da73755d4a8b");
+                }
+            });
+
+        } catch (InvalidInitException e) {
+            e.printStackTrace();
+        }
 
         loginButton.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -61,6 +105,9 @@ public class MainActivity extends AppCompatActivity {
                 bundle.putString(FirebaseAnalytics.Param.METHOD, "Button: Navigated to Sign in screen");
                 //mFirebaseAnalytics.logEvent("button_clicked",null);
                 mFirebaseAnalytics.logEvent(FirebaseAnalytics.Event.SIGN_UP, bundle);
+                HashMap cData = new HashMap<String, String>();
+                cData.put("cd.SignUpNavigation", "Navigated to Sign in screen");
+                MobileCore.trackState("MainScreen", cData);
                 Intent intent = new Intent(MainActivity.this, RegisterActivity.class);
                 startActivity(intent);
             }
@@ -74,16 +121,20 @@ public class MainActivity extends AppCompatActivity {
             {
                 AllowAccess(UserPhoneKey, UserPasswordKey);
                 Log.d("Step_name", "Getting Logged in");
-               // Bundle bundle = new Bundle();
+                // Bundle bundle = new Bundle();
                 bundle.putString(FirebaseAnalytics.Param.METHOD, "Message: Getting Logged in");
                 mFirebaseAnalytics.logEvent("Logged_In", bundle);
+                cData.put("cd.GettingLogIn", "Getting Logged in");
+                MobileCore.trackState("MainScreen", cData);
                 loadingBar.setTitle("Already Logged in.");
                 loadingBar.setMessage("Please wait for few moments.");
                 loadingBar.setCanceledOnTouchOutside(false);
                 loadingBar.show();
             }
         }
+
     }
+
 
     private void AllowAccess(final String phone, final String password)
     {
@@ -102,6 +153,9 @@ public class MainActivity extends AppCompatActivity {
                             Bundle bundle = new Bundle();
                             bundle.putString(FirebaseAnalytics.Param.METHOD, "Message: Already logged in");
                             mFirebaseAnalytics.logEvent("Already_LoggedIn", bundle);
+                            HashMap cData = new HashMap<String, String>();
+                            cData.put("cd.AlreadyLoggedIn", "Already logged in");
+                            MobileCore.trackState("MainScreen", cData);
                             Toast.makeText(MainActivity.this, "Please wait, you are already logged in.", Toast.LENGTH_SHORT).show();
                             loadingBar.dismiss();
                             Intent intent = new Intent(MainActivity.this, HomeActivity.class);
@@ -113,6 +167,9 @@ public class MainActivity extends AppCompatActivity {
                             Bundle bundle = new Bundle();
                             bundle.putString(FirebaseAnalytics.Param.METHOD, "Error: Login Password Incorrect");
                             mFirebaseAnalytics.logEvent("Login_Password_Incorrect", bundle);
+                            HashMap cData = new HashMap<String, String>();
+                            cData.put("cd.LoginPasswordIncorrect", "Login Password Incorrect");
+                            MobileCore.trackState("MainScreen", cData);
                             loadingBar.dismiss();
                             Toast.makeText(MainActivity.this,"Password is incorrect. Enter correct password to proceed.",Toast.LENGTH_SHORT).show();
                         }
@@ -123,6 +180,9 @@ public class MainActivity extends AppCompatActivity {
                     Bundle bundle = new Bundle();
                     bundle.putString(FirebaseAnalytics.Param.METHOD, "Error: Phone number do not exists");
                     mFirebaseAnalytics.logEvent("Login_PhoneNumber_DoNotExists", bundle);
+                    HashMap cData = new HashMap<String, String>();
+                    cData.put("cd.LoginPhoneNumberDoNotExists", "Phone number do not exists");
+                    MobileCore.trackState("MainScreen", cData);
                     Toast.makeText(MainActivity.this, "Account with this " + phone + " number do not exists.", Toast.LENGTH_SHORT).show();
                     loadingBar.dismiss();
                 }
@@ -134,7 +194,26 @@ public class MainActivity extends AppCompatActivity {
                 Bundle bundle = new Bundle();
                 bundle.putString(FirebaseAnalytics.Param.METHOD, "Message: Login Operation Cancelled");
                 mFirebaseAnalytics.logEvent("Login_Operation_Cancelled", bundle);
+                HashMap cData = new HashMap<String, String>();
+                cData.put("cd.LoginOperationCancelled", "Login Operation Cancelled");
+                MobileCore.trackState("MainScreen", cData);
             }
         });
+    }
+
+    @Override
+    public void onResume() {
+        super.onResume();
+        MobileCore.setApplication(getApplication());
+        HashMap cData = new HashMap<String, String>();
+        cData.put("cd.category", "Shopping");
+        //MobileCore.trackState("Login Screen", cData);
+        MobileCore.lifecycleStart(cData);
+    }
+
+    @Override
+    public void onPause() {
+        super.onPause();
+        MobileCore.lifecyclePause();
     }
 }

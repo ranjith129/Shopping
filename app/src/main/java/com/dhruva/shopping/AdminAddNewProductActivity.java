@@ -6,6 +6,7 @@ import android.os.Bundle;
 import android.text.TextUtils;
 import android.util.Log;
 import android.view.View;
+import android.view.WindowManager;
 import android.widget.Button;
 import android.widget.EditText;
 import android.widget.ImageView;
@@ -26,6 +27,16 @@ import com.google.firebase.storage.UploadTask;
 import java.text.SimpleDateFormat;
 import java.util.Calendar;
 import java.util.HashMap;
+import com.adobe.marketing.mobile.AdobeCallback;
+import com.adobe.marketing.mobile.Analytics;
+import com.adobe.marketing.mobile.Identity;
+import com.adobe.marketing.mobile.InvalidInitException;
+import com.adobe.marketing.mobile.Lifecycle;
+import com.adobe.marketing.mobile.LoggingMode;
+import com.adobe.marketing.mobile.MobileCore;
+import com.adobe.marketing.mobile.Signal;
+import com.adobe.marketing.mobile.Target;
+import com.adobe.marketing.mobile.UserProfile;
 
 public class AdminAddNewProductActivity extends AppCompatActivity {
     private String CategoryName, Description, Price, Pname, saveCurrentDate, saveCurrentTime;
@@ -48,6 +59,7 @@ public class AdminAddNewProductActivity extends AppCompatActivity {
         if (getSupportActionBar() != null) {
             getSupportActionBar().hide();
         }
+        getWindow().setSoftInputMode(WindowManager.LayoutParams.SOFT_INPUT_STATE_VISIBLE| WindowManager.LayoutParams.SOFT_INPUT_ADJUST_RESIZE);
         super.onCreate(savedInstanceState);
         mFirebaseAnalytics = FirebaseAnalytics.getInstance(this);
         setContentView(R.layout.activity_admin_add_new_product);
@@ -69,6 +81,9 @@ public class AdminAddNewProductActivity extends AppCompatActivity {
                 Bundle bundle = new Bundle();
                 bundle.putString(FirebaseAnalytics.Param.METHOD, "Input Product Images");
                 mFirebaseAnalytics.logEvent("Input_Product_Image", bundle);
+                HashMap cData = new HashMap<String, String>();
+                cData.put("cd.InputProductImage", "Input Product Images");
+                MobileCore.trackState("AdminAddNewProductScreen", cData);
                 OpenGallery();
             }
         });
@@ -81,6 +96,9 @@ public class AdminAddNewProductActivity extends AppCompatActivity {
                 Bundle bundle = new Bundle();
                 bundle.putString(FirebaseAnalytics.Param.METHOD, "Add new Product");
                 mFirebaseAnalytics.logEvent("Add_New_Product", bundle);
+                HashMap cData = new HashMap<String, String>();
+                cData.put("cd.AddNewProduct", "Add new Product");
+                MobileCore.trackState("AdminAddNewProductScreen", cData);
                 ValidateProductData();
             }
         });
@@ -106,6 +124,9 @@ public class AdminAddNewProductActivity extends AppCompatActivity {
             Bundle bundle = new Bundle();
             bundle.putString(FirebaseAnalytics.Param.METHOD, "Set Product image");
             mFirebaseAnalytics.logEvent("Set_Product_image", bundle);
+            HashMap cData = new HashMap<String, String>();
+            cData.put("cd.SetProductimage", "Set Product image");
+            MobileCore.trackState("AdminAddNewProductScreen", cData);
         }
     }
 
@@ -119,6 +140,9 @@ public class AdminAddNewProductActivity extends AppCompatActivity {
             Bundle bundle = new Bundle();
             bundle.putString(FirebaseAnalytics.Param.METHOD, "Error: Product image is mandatory");
             mFirebaseAnalytics.logEvent("Product_Image_Error", bundle);
+            HashMap cData = new HashMap<String, String>();
+            cData.put("cd.ProductImageError", "Product image is mandatory");
+            MobileCore.trackState("AdminAddNewProductScreen", cData);
             Toast.makeText(this, "Product image is mandatory. Kindly select any image.", Toast.LENGTH_SHORT).show();
         }
         else if (TextUtils.isEmpty(Description))
@@ -127,6 +151,9 @@ public class AdminAddNewProductActivity extends AppCompatActivity {
             Bundle bundle = new Bundle();
             bundle.putString(FirebaseAnalytics.Param.METHOD, "Error: Please enter product description");
             mFirebaseAnalytics.logEvent("Product_Description_Error", bundle);
+            HashMap cData = new HashMap<String, String>();
+            cData.put("cd.ProductDescriptionError", "Please enter product description");
+            MobileCore.trackState("AdminAddNewProductScreen", cData);
             Toast.makeText(this, "Please enter product description.", Toast.LENGTH_SHORT).show();
         }
         else if (TextUtils.isEmpty(Price))
@@ -135,6 +162,9 @@ public class AdminAddNewProductActivity extends AppCompatActivity {
             Bundle bundle = new Bundle();
             bundle.putString(FirebaseAnalytics.Param.METHOD, "Error: Please enter product Price");
             mFirebaseAnalytics.logEvent("Product_Price_Error", bundle);
+            HashMap cData = new HashMap<String, String>();
+            cData.put("cd.ProductPriceError", "Please enter product Price");
+            MobileCore.trackState("AdminAddNewProductScreen", cData);
             Toast.makeText(this, "Please enter product Price.", Toast.LENGTH_SHORT).show();
         }
         else if (TextUtils.isEmpty(Pname))
@@ -143,6 +173,9 @@ public class AdminAddNewProductActivity extends AppCompatActivity {
             Bundle bundle = new Bundle();
             bundle.putString(FirebaseAnalytics.Param.METHOD, "Error: Please enter product name");
             mFirebaseAnalytics.logEvent("Product_Name_Error", bundle);
+            HashMap cData = new HashMap<String, String>();
+            cData.put("cd.ProductNameError", "Please enter product name");
+            MobileCore.trackState("AdminAddNewProductScreen", cData);
             Toast.makeText(this, "Please enter product name.", Toast.LENGTH_SHORT).show();
         }
         else
@@ -151,6 +184,9 @@ public class AdminAddNewProductActivity extends AppCompatActivity {
             Bundle bundle = new Bundle();
             bundle.putString(FirebaseAnalytics.Param.METHOD, "Message: Set Product all information");
             mFirebaseAnalytics.logEvent("Product_Information_Updated", bundle);
+            HashMap cData = new HashMap<String, String>();
+            cData.put("cd.ProductInformationUpdated", "Set Product all information");
+            MobileCore.trackState("AdminAddNewProductScreen", cData);
             StoreProductInformation();
         }
     }
@@ -172,7 +208,8 @@ public class AdminAddNewProductActivity extends AppCompatActivity {
         saveCurrentTime = currentTime.format(calendar.getTime());
         currentTime = new SimpleDateFormat("HHmmss");
         ProdCurrentTime = currentTime.format(calendar.getTime());
-        productRandomKey = Pname + ProdCurrentDate + ProdCurrentTime;
+        String productRandomKeyval = Pname + ProdCurrentDate + ProdCurrentTime;
+        productRandomKey = productRandomKeyval.trim().replace(" ", "");
 
         final StorageReference filePath = ProductImagesRef.child(ImageUri.getLastPathSegment() + productRandomKey + ".jpg");
         final UploadTask uploadTask = filePath.putFile(ImageUri);
@@ -184,6 +221,9 @@ public class AdminAddNewProductActivity extends AppCompatActivity {
                 Bundle bundle = new Bundle();
                 bundle.putString(FirebaseAnalytics.Param.METHOD, "Error: Product Information Update error");
                 mFirebaseAnalytics.logEvent("Product_InfoUpdate_Error", bundle);
+                HashMap cData = new HashMap<String, String>();
+                cData.put("cd.ProductInfoUpdateError", "Product Information Update error");
+                MobileCore.trackState("AdminAddNewProductScreen", cData);
                 String message = e.toString();
                 Toast.makeText(AdminAddNewProductActivity.this, "Error: " + message, Toast.LENGTH_SHORT).show();
                 loadingBar.dismiss();
@@ -207,6 +247,9 @@ public class AdminAddNewProductActivity extends AppCompatActivity {
                         Bundle bundle = new Bundle();
                         bundle.putString(FirebaseAnalytics.Param.METHOD, "Message: The Product image Update continued");
                         mFirebaseAnalytics.logEvent("Product_ImageUpdate_Continued", bundle);
+                        HashMap cData = new HashMap<String, String>();
+                        cData.put("cd.ProductImageUpdateContinued", "The Product image Update continued");
+                        MobileCore.trackState("AdminAddNewProductScreen", cData);
                         downloadImageUrl = filePath.getDownloadUrl().toString();
                         return filePath.getDownloadUrl();
                     }
@@ -220,6 +263,9 @@ public class AdminAddNewProductActivity extends AppCompatActivity {
                             Bundle bundle = new Bundle();
                             bundle.putString(FirebaseAnalytics.Param.METHOD, "Message: Download the Product image Url Successfully");
                             mFirebaseAnalytics.logEvent("Download_ProductImageUrl_Succeed", bundle);
+                            HashMap cData = new HashMap<String, String>();
+                            cData.put("cd.DownloadProductImageUrlSucceed", "Download the Product image Url Successfully");
+                            MobileCore.trackState("AdminAddNewProductScreen", cData);
                             Toast.makeText(AdminAddNewProductActivity.this, "Download the Product image Url Successfully.", Toast.LENGTH_SHORT).show();
                             SaveProductInfoToDatabase();
                         }
@@ -240,34 +286,39 @@ public class AdminAddNewProductActivity extends AppCompatActivity {
         productMap.put("category", CategoryName);
         productMap.put("price", Price);
         productMap.put("pname", Pname);
-
         ProductsRef.child(productRandomKey).updateChildren(productMap)
-            .addOnCompleteListener(new OnCompleteListener<Void>() {
-                @Override
-                public void onComplete(@NonNull Task<Void> task)
-                {
-                    if (task.isSuccessful())
+                .addOnCompleteListener(new OnCompleteListener<Void>() {
+                    @Override
+                    public void onComplete(@NonNull Task<Void> task)
                     {
-                        Log.d("Step_name", "New Product is added successfully");
-                        Bundle bundle = new Bundle();
-                        bundle.putString(FirebaseAnalytics.Param.METHOD, "Message: New Product is added successfully");
-                        mFirebaseAnalytics.logEvent("NewProduct_Added_Succeed", bundle);
-                        Intent intent = new Intent(AdminAddNewProductActivity.this, AdminCategoryActivity.class);
-                        startActivity(intent);
-                        loadingBar.dismiss();
-                        Toast.makeText(AdminAddNewProductActivity.this, "The new Product is added successfully.", Toast.LENGTH_SHORT).show();
+                        if (task.isSuccessful())
+                        {
+                            Log.d("Step_name", "New Product is added successfully");
+                            Bundle bundle = new Bundle();
+                            bundle.putString(FirebaseAnalytics.Param.METHOD, "Message: New Product is added successfully");
+                            mFirebaseAnalytics.logEvent("NewProduct_Added_Succeed", bundle);
+                            HashMap cData = new HashMap<String, String>();
+                            cData.put("cd.NewProductAddedSucceed", "New Product is added successfully");
+                            MobileCore.trackState("AdminAddNewProductScreen", cData);
+                            Intent intent = new Intent(AdminAddNewProductActivity.this, AdminCategoryActivity.class);
+                            startActivity(intent);
+                            loadingBar.dismiss();
+                            Toast.makeText(AdminAddNewProductActivity.this, "The new Product is added successfully.", Toast.LENGTH_SHORT).show();
+                        }
+                        else
+                        {
+                            Log.d("Step_name", "Add New Product is unsuccessful");
+                            Bundle bundle = new Bundle();
+                            bundle.putString(FirebaseAnalytics.Param.METHOD, "Message: Add New Product is unsuccessful");
+                            mFirebaseAnalytics.logEvent("Added_NewProduct_Failure", bundle);
+                            HashMap cData = new HashMap<String, String>();
+                            cData.put("cd.AddedNewProductFailure", "Adding New Product is Failed");
+                            MobileCore.trackState("AdminAddNewProductScreen", cData);
+                            loadingBar.dismiss();
+                            String message = task.getException().toString();
+                            Toast.makeText(AdminAddNewProductActivity.this, "Error: " + message, Toast.LENGTH_SHORT).show();
+                        }
                     }
-                    else
-                    {
-                        Log.d("Step_name", "Add New Product is unsuccessful - A");
-                        Bundle bundle = new Bundle();
-                        bundle.putString(FirebaseAnalytics.Param.METHOD, "Message: Add New Product is unsuccessful");
-                        mFirebaseAnalytics.logEvent("Added_NewProduct_Failure", bundle);
-                        loadingBar.dismiss();
-                        String message = task.getException().toString();
-                        Toast.makeText(AdminAddNewProductActivity.this, "Error: " + message, Toast.LENGTH_SHORT).show();
-                    }
-                }
-            });
+                });
     }
 }

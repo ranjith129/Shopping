@@ -1,17 +1,13 @@
 package com.dhruva.shopping;
-
 import android.os.Bundle;
-
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
-
 import androidx.annotation.NonNull;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
-
 import com.dhruva.shopping.Model.Cart;
 import com.dhruva.shopping.Prevalent.CartViewHolder;
 import com.firebase.ui.database.FirebaseRecyclerAdapter;
@@ -19,6 +15,18 @@ import com.firebase.ui.database.FirebaseRecyclerOptions;
 import com.google.firebase.analytics.FirebaseAnalytics;
 import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.FirebaseDatabase;
+import com.adobe.marketing.mobile.AdobeCallback;
+import com.adobe.marketing.mobile.Analytics;
+import com.adobe.marketing.mobile.Identity;
+import com.adobe.marketing.mobile.InvalidInitException;
+import com.adobe.marketing.mobile.Lifecycle;
+import com.adobe.marketing.mobile.LoggingMode;
+import com.adobe.marketing.mobile.MobileCore;
+import com.adobe.marketing.mobile.Signal;
+import com.adobe.marketing.mobile.Target;
+import com.adobe.marketing.mobile.UserProfile;
+
+import java.util.HashMap;
 
 public class AdminUserProductsActivity extends AppCompatActivity {
     private RecyclerView productsList;
@@ -47,8 +55,8 @@ public class AdminUserProductsActivity extends AppCompatActivity {
     protected void onStart() {
         super.onStart();
         FirebaseRecyclerOptions<Cart> options= new FirebaseRecyclerOptions.Builder<Cart>()
-            .setQuery(cartListRef,Cart.class)
-            .build();
+                .setQuery(cartListRef,Cart.class)
+                .build();
 
         FirebaseRecyclerAdapter<Cart, CartViewHolder> adapter = new FirebaseRecyclerAdapter<Cart, CartViewHolder>(options) {
             @Override
@@ -65,6 +73,13 @@ public class AdminUserProductsActivity extends AppCompatActivity {
                 bundle.putString(FirebaseAnalytics.Param.ITEM_NAME, String.valueOf(model.getPname()));
                 bundle.putString(FirebaseAnalytics.Param.QUANTITY, String.valueOf(model.getQuantity()));
                 mFirebaseAnalytics.logEvent("User_Product_DetailsView", bundle);
+                HashMap cData = new HashMap<String, String>();
+                cData.put("cd.ProductID", String.valueOf(model.getPid()));
+                cData.put("cd.ProductName", String.valueOf(model.getPname()));
+                cData.put("cd.ProductPrice", String.valueOf(model.getPrice()));
+                cData.put("cd.ProductQuantity", String.valueOf(model.getQuantity()));
+                cData.put("cd.ProductDetailsView", "User Product details View");
+                MobileCore.trackState("AdminUserProductScreen", cData);
             }
 
             @NonNull
