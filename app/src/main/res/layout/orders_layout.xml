@@ -67,6 +67,7 @@
             android:text="Date Time"
             android:textColor="#333333"
             android:textStyle="bold" />
+
         <Button
             android:id="@+id/show_all_product_btn"
             android:layout_width="match_parent"
@@ -78,8 +79,7 @@
             android:background="@drawable/buttons"
             android:text="Show User Order Product"
             android:textColor="#ffffff"
-            android:textSize="16dp"
-            />
+            android:textSize="16dp" />
 
     </RelativeLayout>
 

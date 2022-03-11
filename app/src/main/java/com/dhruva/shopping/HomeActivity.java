@@ -94,7 +94,8 @@ public class HomeActivity extends AppCompatActivity implements NavigationView.On
                 bundle.putString(FirebaseAnalytics.Param.METHOD, "View cart items");
                 mFirebaseAnalytics.logEvent(FirebaseAnalytics.Event.VIEW_CART, bundle);
                 HashMap cData = new HashMap<String, String>();
-                cData.put("cd.ViewCart", "View cart items");
+                cData.put("cd.CartItemStatus", "View cart items");
+                cData.put("cd.screenName", "HomeScreen");
                 MobileCore.trackState("HomeScreen", cData);
                 Intent intent = new Intent(HomeActivity.this,CartActivity.class);
                 startActivity(intent);
@@ -132,6 +133,7 @@ public class HomeActivity extends AppCompatActivity implements NavigationView.On
                                 cData.put("cd.ProductPrice", String.valueOf(model.getPrice()));
                                 cData.put("cd.ProductDescription", String.valueOf(model.getDescription()));
                                 cData.put("cd.ProductDetailView", "Product details view");
+                                cData.put("cd.screenName", "HomeScreen");
                                 MobileCore.trackState("HomeScreen", cData);
                                 Intent intent =new Intent(HomeActivity.this,ProductDetailsActivity.class);
                                 intent.putExtra("pid",model.getPid());
@@ -161,6 +163,7 @@ public class HomeActivity extends AppCompatActivity implements NavigationView.On
             mFirebaseAnalytics.logEvent("Back_Previous_Activity", bundle);
             HashMap cData = new HashMap<String, String>();
             cData.put("cd.BackPreviousActivity", "Previous Activity Opened");
+            cData.put("cd.screenName", "HomeScreen");
             MobileCore.trackState("HomeScreen", cData);
             drawerLayout.closeDrawer(GravityCompat.START);
         }
@@ -170,7 +173,8 @@ public class HomeActivity extends AppCompatActivity implements NavigationView.On
             bundle.putString(FirebaseAnalytics.Param.METHOD, "Back button pressed Start");
             mFirebaseAnalytics.logEvent("Back_Button_Pressed", bundle);
             HashMap cData = new HashMap<String, String>();
-            cData.put("cd.BackButtonPressed", "Back button pressed");
+            cData.put("cd.BackPreviousActivity", "Back button pressed");
+            cData.put("cd.screenName", "HomeScreen");
             MobileCore.trackState("HomeScreen", cData);
             super.onBackPressed();
         }
@@ -193,7 +197,8 @@ public class HomeActivity extends AppCompatActivity implements NavigationView.On
             bundle.putString(FirebaseAnalytics.Param.METHOD, "Action bar Navigating to Cart view");
             mFirebaseAnalytics.logEvent("ActionBar_NavigationTo_View_Cart", bundle);
             HashMap cData = new HashMap<String, String>();
-            cData.put("cd.ActionBarViewCart", "Action bar Navigating to Cart view");
+            cData.put("cd.NavigationType", "Action bar Navigating to Cart view");
+            cData.put("cd.screenName", "HomeScreen");
             MobileCore.trackState("HomeScreen", cData);
             Intent intent = new Intent(HomeActivity.this,CartActivity.class);
             startActivity(intent);
@@ -203,7 +208,8 @@ public class HomeActivity extends AppCompatActivity implements NavigationView.On
             bundle.putString(FirebaseAnalytics.Param.METHOD, "Action bar Navigation to Items Search");
             mFirebaseAnalytics.logEvent("ActionBar_NavigationTo_Search", bundle);
             HashMap cData = new HashMap<String, String>();
-            cData.put("cd.ActionBarSearch", "Action bar Navigation to Items Search");
+            cData.put("cd.NavigationType", "Action bar Navigation to Items Search");
+            cData.put("cd.screenName", "HomeScreen");
             MobileCore.trackState("HomeScreen", cData);
             Intent intent = new Intent(HomeActivity.this,SearchProductsActivity.class);
             startActivity(intent);
@@ -213,7 +219,8 @@ public class HomeActivity extends AppCompatActivity implements NavigationView.On
             bundle.putString(FirebaseAnalytics.Param.METHOD, "Action bar Navigation to Categories");
             mFirebaseAnalytics.logEvent("ActionBar_NavigationTo_Categories", bundle);
             HashMap cData = new HashMap<String, String>();
-            cData.put("cd.ActionBarCategories", "Action bar Navigation to Categories");
+            cData.put("cd.NavigationType", "Action bar Navigation to Categories");
+            cData.put("cd.screenName", "HomeScreen");
             MobileCore.trackState("HomeScreen", cData);
             Toast.makeText(HomeActivity.this,"Categories Clicked.",Toast.LENGTH_SHORT).show();
         } else if (id == R.id.nav_settings) {
@@ -222,7 +229,8 @@ public class HomeActivity extends AppCompatActivity implements NavigationView.On
             bundle.putString(FirebaseAnalytics.Param.METHOD, "Action bar Navigation to Settings");
             mFirebaseAnalytics.logEvent("ActionBar_NavigationTo_Settings", bundle);
             HashMap cData = new HashMap<String, String>();
-            cData.put("cd.ActionBarSettings", "Action bar Navigation to Settings");
+            cData.put("cd.NavigationType", "Action bar Navigation to Settings");
+            cData.put("cd.screenName", "HomeScreen");
             MobileCore.trackState("HomeScreen", cData);
             Intent intent=new Intent(HomeActivity.this, SettingsActivity.class);
             startActivity(intent);
@@ -232,7 +240,8 @@ public class HomeActivity extends AppCompatActivity implements NavigationView.On
             bundle.putString(FirebaseAnalytics.Param.METHOD, "Action bar Navigation to Logout (Main) Screen");
             mFirebaseAnalytics.logEvent("ActionBar_NavigationTo_Logout", bundle);
             HashMap cData = new HashMap<String, String>();
-            cData.put("cd.ActionBarLogout", "Action bar Navigation to Logout Screen (Main)");
+            cData.put("cd.Logout", "Action bar Navigation to Logout Screen (Main)");
+            cData.put("cd.screenName", "HomeScreen");
             MobileCore.trackState("HomeScreen", cData);
             Paper.book().destroy();
             Intent intent=new Intent(HomeActivity.this,MainActivity.class);
@@ -254,7 +263,8 @@ public class HomeActivity extends AppCompatActivity implements NavigationView.On
             bundle.putString(FirebaseAnalytics.Param.METHOD, "Menu bar Navigating to Cart view");
             mFirebaseAnalytics.logEvent("Menu_NavigationTo_View_Cart", bundle);
             HashMap cData = new HashMap<String, String>();
-            cData.put("cd.MenuBarViewCart", "Menu bar Navigating to Cart view");
+            cData.put("cd.NavigationType", "Menu bar Navigating to Cart view");
+            cData.put("cd.screenName", "HomeScreen");
             MobileCore.trackState("HomeScreen", cData);
             Intent intent = new Intent(HomeActivity.this,CartActivity.class);
             startActivity(intent);
@@ -264,7 +274,8 @@ public class HomeActivity extends AppCompatActivity implements NavigationView.On
             bundle.putString(FirebaseAnalytics.Param.METHOD, "Menu Navigation to Items Search");
             mFirebaseAnalytics.logEvent("Menu_NavigationTo_Search", bundle);
             HashMap cData = new HashMap<String, String>();
-            cData.put("cd.MenuBarSearch", "Menu Navigation to Items Search");
+            cData.put("cd.NavigationType", "Menu Navigation to Items Search");
+            cData.put("cd.screenName", "HomeScreen");
             MobileCore.trackState("HomeScreen", cData);
             Intent intent = new Intent(HomeActivity.this,SearchProductsActivity.class);
             startActivity(intent);
@@ -274,7 +285,8 @@ public class HomeActivity extends AppCompatActivity implements NavigationView.On
             bundle.putString(FirebaseAnalytics.Param.METHOD, "Menu Navigation to Categories");
             mFirebaseAnalytics.logEvent("Menu_NavigationTo_Categories", bundle);
             HashMap cData = new HashMap<String, String>();
-            cData.put("cd.MenuBarCategories", "Menu Navigation to Categories");
+            cData.put("cd.NavigationType", "Menu Navigation to Categories");
+            cData.put("cd.screenName", "HomeScreen");
             MobileCore.trackState("HomeScreen", cData);
             Toast.makeText(HomeActivity.this,"Categories Clicked.",Toast.LENGTH_SHORT).show();
         } else if (id == R.id.nav_settings) {
@@ -283,7 +295,8 @@ public class HomeActivity extends AppCompatActivity implements NavigationView.On
             bundle.putString(FirebaseAnalytics.Param.METHOD, "Menu Navigation to Settings");
             mFirebaseAnalytics.logEvent("Menu_NavigationTo_Setting", bundle);
             HashMap cData = new HashMap<String, String>();
-            cData.put("cd.MenuBarSettings", "Menu Navigation to Settings");
+            cData.put("cd.NavigationType", "Menu Navigation to Settings");
+            cData.put("cd.screenName", "HomeScreen");
             MobileCore.trackState("HomeScreen", cData);
             Intent intent=new Intent(HomeActivity.this, SettingsActivity.class);
             startActivity(intent);
@@ -293,7 +306,8 @@ public class HomeActivity extends AppCompatActivity implements NavigationView.On
             bundle.putString(FirebaseAnalytics.Param.METHOD, "Menu Navigation to Logout (Main) Screen");
             mFirebaseAnalytics.logEvent("Menu_NavigationTo_Logout", bundle);
             HashMap cData = new HashMap<String, String>();
-            cData.put("cd.MenuBarLogout", "Menu Navigation to Logout (Main) Screen");
+            cData.put("cd.Logout", "Menu Navigation to Logout (Main) Screen");
+            cData.put("cd.screenName", "HomeScreen");
             MobileCore.trackState("HomeScreen", cData);
             Paper.book().destroy();
             Intent intent=new Intent(HomeActivity.this,MainActivity.class);

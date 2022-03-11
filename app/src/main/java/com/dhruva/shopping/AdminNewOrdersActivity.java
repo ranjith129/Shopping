@@ -95,7 +95,8 @@ public class AdminNewOrdersActivity extends AppCompatActivity {
                                 cData.put("cd.UserOrderTime", String.valueOf(model.getTime()));
                                 cData.put("cd.UserShipping_Address", String.valueOf(model.getAddress()));
                                 cData.put("cd.UserShippingCity", String.valueOf(model.getCity()));
-                                cData.put("cd.UserDetails", "User order details view");
+                                cData.put("cd.UserOrderDetails", "User order details view");
+                                cData.put("cd.screenName", "AdminNewOrdersScreen");
                                 MobileCore.trackState("AdminNewOrdersScreen", cData);
                                 Intent intent = new Intent(AdminNewOrdersActivity.this,AdminUserProductsActivity.class);
                                 intent.putExtra("uid",uID);
@@ -119,6 +120,7 @@ public class AdminNewOrdersActivity extends AppCompatActivity {
                                             mFirebaseAnalytics.logEvent("Order_Status", bundle);
                                             HashMap cData = new HashMap<String, String>();
                                             cData.put("cd.OrderStatus", "Update order status");
+                                            cData.put("cd.screenName", "AdminNewOrdersScreen");
                                             MobileCore.trackState("AdminNewOrdersScreen", cData);
                                             String uID = getRef(position).getKey();
                                             RemoverOrder(uID);
@@ -130,6 +132,7 @@ public class AdminNewOrdersActivity extends AppCompatActivity {
                                             mFirebaseAnalytics.logEvent("Order_Status", bundle);
                                             HashMap cData = new HashMap<String, String>();
                                             cData.put("cd.OrderStatus", "Order status not updated");
+                                            cData.put("cd.screenName", "AdminNewOrdersScreen");
                                             MobileCore.trackState("AdminNewOrdersScreen", cData);
                                             finish();
                                         }
@@ -172,6 +175,7 @@ public class AdminNewOrdersActivity extends AppCompatActivity {
         mFirebaseAnalytics.logEvent("Order_Status", bundle);
         HashMap cData = new HashMap<String, String>();
         cData.put("cd.OrderStatus", "User Order Removed");
+        cData.put("cd.screenName", "AdminNewOrdersScreen");
         MobileCore.trackState("AdminNewOrdersScreen", cData);
         ordersRef.child(uID).removeValue();
     }

@@ -32,15 +32,15 @@
         <activity android:name="com.dhruva.shopping.HomeActivity" android:theme="@style/Theme.AppCompat.NoActionBar"/>
         <activity android:name="com.dhruva.shopping.SettingsActivity" />
         <activity android:name="com.dhruva.shopping.SearchProductsActivity" />
-        <activity android:name="com.dhruva.shopping.RegisterActivity" android:windowSoftInputMode="adjustResize" />
+        <activity android:name="com.dhruva.shopping.RegisterActivity" />
         <activity android:name="com.dhruva.shopping.ProductDetailsActivity" />
-        <activity android:name="com.dhruva.shopping.LoginActivity" android:windowSoftInputMode="adjustResize" />
-        <activity android:name="com.dhruva.shopping.ConfirmFinalOrderActivity" android:windowSoftInputMode="adjustResize"/>
+        <activity android:name="com.dhruva.shopping.LoginActivity" />
+        <activity android:name="com.dhruva.shopping.ConfirmFinalOrderActivity"/>
         <activity android:name="com.dhruva.shopping.CartActivity" />
         <activity android:name="com.dhruva.shopping.AdminUserProductsActivity" />
         <activity android:name="com.dhruva.shopping.AdminNewOrdersActivity" />
         <activity android:name="com.dhruva.shopping.AdminCategoryActivity" />
-        <activity android:name="com.dhruva.shopping.AdminAddNewProductActivity" android:windowSoftInputMode="adjustResize"/>
+        <activity android:name="com.dhruva.shopping.AdminAddNewProductActivity"/>
         <activity android:name="com.theartofdev.edmodo.cropper.CropImageActivity" android:theme="@style/Base.Theme.AppCompat" />
         <activity android:name="com.dhruva.shopping.MainActivity" android:windowSoftInputMode="adjustResize" />
         <activity android:exported="true"

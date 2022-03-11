@@ -62,6 +62,7 @@ public class SearchProductsActivity extends AppCompatActivity {
                 mFirebaseAnalytics.logEvent(FirebaseAnalytics.Event.SEARCH, bundle);
                 HashMap cData = new HashMap<String, String>();
                 cData.put("cd.SearchProduct", "Searched given item name");
+                cData.put("cd.screenName", "SearchProductScreen");
                 MobileCore.trackState("SearchProductScreen", cData);
             }
         });
@@ -98,7 +99,8 @@ public class SearchProductsActivity extends AppCompatActivity {
                         cData.put("cd.ProductName", "Searched given item name");
                         cData.put("cd.ProductPrice", "Searched given item name");
                         cData.put("cd.ProductImageUrl", "Searched given item name");
-                        cData.put("cd.SearchedProductDetails", "Searched Product item Details view");
+                        cData.put("cd.SearchProduct", "Searched Product item Details view");
+                        cData.put("cd.screenName", "SearchProductScreen");
                         MobileCore.trackState("SearchProductScreen", cData);
                         Intent intent =new Intent(SearchProductsActivity.this,ProductDetailsActivity.class);
                         intent.putExtra("pid",model.getPid());

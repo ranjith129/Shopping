@@ -35,7 +35,6 @@ public class AdminCategoryActivity extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         mFirebaseAnalytics = FirebaseAnalytics.getInstance(this);
         setContentView(R.layout.activity_admin_category);
-
         LogoutBtn = (Button) findViewById(R.id.admin_logout_btn);
         LogoutBtn.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -45,7 +44,8 @@ public class AdminCategoryActivity extends AppCompatActivity {
                 bundle.putString(FirebaseAnalytics.Param.METHOD, "Button: Navigation to Logout (Main) Screen");
                 mFirebaseAnalytics.logEvent("Admin_Logout", bundle);
                 HashMap cData = new HashMap<String, String>();
-                cData.put("cd.AdminLogout", "Navigation to Logout (Main) Screen");
+                cData.put("cd.LogoutType", "Navigation to Logout (Main) Screen");
+                cData.put("cd.screenName", "AdminCategoryScreen");
                 MobileCore.trackState("AdminCategoryScreen", cData);
                 Intent intent= new Intent(AdminCategoryActivity.this,MainActivity.class);
                 intent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TASK | Intent.FLAG_ACTIVITY_CLEAR_TASK);
@@ -62,7 +62,8 @@ public class AdminCategoryActivity extends AppCompatActivity {
                 bundle.putString(FirebaseAnalytics.Param.METHOD, "Button: Check the orders");
                 mFirebaseAnalytics.logEvent("Admin_Check_Orders", bundle);
                 HashMap cData = new HashMap<String, String>();
-                cData.put("cd.AdminCheckOrders", "Check the orders");
+                cData.put("cd.OrderStatus", "Check the orders");
+                cData.put("cd.screenName", "AdminCategoryScreen");
                 MobileCore.trackState("AdminCategoryScreen", cData);
                 Intent intent= new Intent(AdminCategoryActivity.this,AdminNewOrdersActivity.class);
                 startActivity(intent);
@@ -91,7 +92,8 @@ public class AdminCategoryActivity extends AppCompatActivity {
                 bundle.putString(FirebaseAnalytics.Param.METHOD, "Button: Product TShirts");
                 mFirebaseAnalytics.logEvent("Admin_Uploaded_TShirts", bundle);
                 HashMap cData = new HashMap<String, String>();
-                cData.put("cd.AdminUploadedTShirts", "Product TShirts");
+                cData.put("cd.ProductUploadStatus", "Product TShirts Uploaded");
+                cData.put("cd.screenName", "AdminCategoryScreen");
                 MobileCore.trackState("AdminCategoryScreen", cData);
                 Intent intent = new Intent(AdminCategoryActivity.this, com.dhruva.shopping.AdminAddNewProductActivity.class);
                 intent.putExtra("category", "tShirts");
@@ -108,7 +110,8 @@ public class AdminCategoryActivity extends AppCompatActivity {
                 bundle.putString(FirebaseAnalytics.Param.METHOD, "Button: Product sports TShirts");
                 mFirebaseAnalytics.logEvent("Admin_Uploaded_SportsTShirts", bundle);
                 HashMap cData = new HashMap<String, String>();
-                cData.put("cd.AdminUploadedSportsTShirts", "Product sports TShirts");
+                cData.put("cd.ProductUploadStatus", "Product sports TShirts Uploaded");
+                cData.put("cd.screenName", "AdminCategoryScreen");
                 MobileCore.trackState("AdminCategoryScreen", cData);
                 Intent intent = new Intent(AdminCategoryActivity.this, com.dhruva.shopping.AdminAddNewProductActivity.class);
                 intent.putExtra("category", "Sports tShirts");
@@ -125,7 +128,8 @@ public class AdminCategoryActivity extends AppCompatActivity {
                 bundle.putString(FirebaseAnalytics.Param.METHOD, "Button: Product female Dresses");
                 mFirebaseAnalytics.logEvent("Admin_Uploaded_FemaleDresses", bundle);
                 HashMap cData = new HashMap<String, String>();
-                cData.put("cd.AdminUploadedFemaleDresses", "Product female Dresses");
+                cData.put("cd.ProductUploadStatus", "Product female Dresses Uploaded");
+                cData.put("cd.screenName", "AdminCategoryScreen");
                 MobileCore.trackState("AdminCategoryScreen", cData);
                 Intent intent = new Intent(AdminCategoryActivity.this, com.dhruva.shopping.AdminAddNewProductActivity.class);
                 intent.putExtra("category", "Dresses");
@@ -142,7 +146,8 @@ public class AdminCategoryActivity extends AppCompatActivity {
                 bundle.putString(FirebaseAnalytics.Param.METHOD, "Button: Product Sweathers");
                 mFirebaseAnalytics.logEvent("Admin_Uploaded_Sweathers", bundle);
                 HashMap cData = new HashMap<String, String>();
-                cData.put("cd.AdminUploadedSweathers", "Product Sweathers");
+                cData.put("cd.ProductUploadStatus", "Product Sweathers Uploaded");
+                cData.put("cd.screenName", "AdminCategoryScreen");
                 MobileCore.trackState("AdminCategoryScreen", cData);
                 Intent intent = new Intent(AdminCategoryActivity.this, com.dhruva.shopping.AdminAddNewProductActivity.class);
                 intent.putExtra("category", "Sweathers");
@@ -159,7 +164,8 @@ public class AdminCategoryActivity extends AppCompatActivity {
                 bundle.putString(FirebaseAnalytics.Param.METHOD, "Button: Product Glasses");
                 mFirebaseAnalytics.logEvent("Admin_Uploaded_Glasses", bundle);
                 HashMap cData = new HashMap<String, String>();
-                cData.put("cd.AdminUploadedGlasses", "Product Glasses");
+                cData.put("cd.ProductUploadStatus", "Product Glasses Uploaded");
+                cData.put("cd.screenName", "AdminCategoryScreen");
                 MobileCore.trackState("AdminCategoryScreen", cData);
                 Intent intent = new Intent(AdminCategoryActivity.this, com.dhruva.shopping.AdminAddNewProductActivity.class);
                 intent.putExtra("category", "Glasses");
@@ -176,7 +182,8 @@ public class AdminCategoryActivity extends AppCompatActivity {
                 bundle.putString(FirebaseAnalytics.Param.METHOD, "Button: Product Hats Caps");
                 mFirebaseAnalytics.logEvent("Admin_Uploaded_HatsCaps", bundle);
                 HashMap cData = new HashMap<String, String>();
-                cData.put("cd.AdminUploadedHatsCaps", "Product Hats Caps");
+                cData.put("cd.ProductUploadStatus", "Product Hats Caps Uploaded");
+                cData.put("cd.screenName", "AdminCategoryScreen");
                 MobileCore.trackState("AdminCategoryScreen", cData);
                 Intent intent = new Intent(AdminCategoryActivity.this, com.dhruva.shopping.AdminAddNewProductActivity.class);
                 intent.putExtra("category", "Hats Caps");
@@ -193,7 +200,8 @@ public class AdminCategoryActivity extends AppCompatActivity {
                 bundle.putString(FirebaseAnalytics.Param.METHOD, "Button: Product Wallets Bags Purses");
                 mFirebaseAnalytics.logEvent("Admin_Uploaded_WalletsBagsPurses", bundle);
                 HashMap cData = new HashMap<String, String>();
-                cData.put("cd.AdminUploadedWalletsBagsPurses", "Product Wallets Bags Purses");
+                cData.put("cd.ProductUploadStatus", "Product Wallets Bags Purses Uploaded");
+                cData.put("cd.screenName", "AdminCategoryScreen");
                 MobileCore.trackState("AdminCategoryScreen", cData);
                 Intent intent = new Intent(AdminCategoryActivity.this, com.dhruva.shopping.AdminAddNewProductActivity.class);
                 intent.putExtra("category", "Wallets Bags Purses");
@@ -210,7 +218,8 @@ public class AdminCategoryActivity extends AppCompatActivity {
                 bundle.putString(FirebaseAnalytics.Param.METHOD, "Button: Product Shoes");
                 mFirebaseAnalytics.logEvent("Admin_Uploaded_Shoes", bundle);
                 HashMap cData = new HashMap<String, String>();
-                cData.put("cd.AdminUploadedShoes", "Product Shoes");
+                cData.put("cd.ProductUploadStatus", "Product Shoes Uploaded");
+                cData.put("cd.screenName", "AdminCategoryScreen");
                 MobileCore.trackState("AdminCategoryScreen", cData);
                 Intent intent = new Intent(AdminCategoryActivity.this, com.dhruva.shopping.AdminAddNewProductActivity.class);
                 intent.putExtra("category", "Shoes");
@@ -227,7 +236,8 @@ public class AdminCategoryActivity extends AppCompatActivity {
                 bundle.putString(FirebaseAnalytics.Param.METHOD, "Button: Product HeadPhones");
                 mFirebaseAnalytics.logEvent("Admin_Uploaded_HeadPhones", bundle);
                 HashMap cData = new HashMap<String, String>();
-                cData.put("cd.AdminUploadedHeadPhones", "Product HeadPhones");
+                cData.put("cd.ProductUploadStatus", "Product HeadPhones Uploaded");
+                cData.put("cd.screenName", "AdminCategoryScreen");
                 MobileCore.trackState("AdminCategoryScreen", cData);
                 Intent intent = new Intent(AdminCategoryActivity.this, com.dhruva.shopping.AdminAddNewProductActivity.class);
                 intent.putExtra("category", "HeadPhones");
@@ -244,7 +254,8 @@ public class AdminCategoryActivity extends AppCompatActivity {
                 bundle.putString(FirebaseAnalytics.Param.METHOD, "Button: Product Laptops");
                 mFirebaseAnalytics.logEvent("Admin_Uploaded_Laptops", bundle);
                 HashMap cData = new HashMap<String, String>();
-                cData.put("cd.AdminUploadedLaptops", "Product Laptops");
+                cData.put("cd.ProductUploadStatus", "Product Laptops Uploaded");
+                cData.put("cd.screenName", "AdminCategoryScreen");
                 MobileCore.trackState("AdminCategoryScreen", cData);
                 Intent intent = new Intent(AdminCategoryActivity.this, com.dhruva.shopping.AdminAddNewProductActivity.class);
                 intent.putExtra("category", "Laptops");
@@ -261,7 +272,8 @@ public class AdminCategoryActivity extends AppCompatActivity {
                 bundle.putString(FirebaseAnalytics.Param.METHOD, "Button: Product Watches");
                 mFirebaseAnalytics.logEvent("Admin_Uploaded_Watches", bundle);
                 HashMap cData = new HashMap<String, String>();
-                cData.put("cd.AdminUploadedWatches", "Product Watches");
+                cData.put("cd.ProductUploadStatus", "Product Watches Uploaded");
+                cData.put("cd.screenName", "AdminCategoryScreen");
                 MobileCore.trackState("AdminCategoryScreen", cData);
                 Intent intent = new Intent(AdminCategoryActivity.this, com.dhruva.shopping.AdminAddNewProductActivity.class);
                 intent.putExtra("category", "Watches");
@@ -278,7 +290,8 @@ public class AdminCategoryActivity extends AppCompatActivity {
                 bundle.putString(FirebaseAnalytics.Param.METHOD, "Button: Product Mobile Phones");
                 mFirebaseAnalytics.logEvent("Admin_Uploaded_MobilePhones", bundle);
                 HashMap cData = new HashMap<String, String>();
-                cData.put("cd.AdminUploadedMobilePhones", "Product Mobile Phones");
+                cData.put("cd.ProductUploadStatus", "Product Mobile Phones Uploaded");
+                cData.put("cd.screenName", "AdminCategoryScreen");
                 MobileCore.trackState("AdminCategoryScreen", cData);
                 Intent intent = new Intent(AdminCategoryActivity.this, com.dhruva.shopping.AdminAddNewProductActivity.class);
                 intent.putExtra("category", "Mobile Phones");

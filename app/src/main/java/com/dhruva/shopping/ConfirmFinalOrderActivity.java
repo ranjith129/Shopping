@@ -60,7 +60,8 @@ public class ConfirmFinalOrderActivity extends AppCompatActivity {
                 bundle.putString(FirebaseAnalytics.Param.METHOD, "Message: Order confirmation checking");
                 mFirebaseAnalytics.logEvent("OrderConfirmation_Checks", bundle);
                 HashMap cData = new HashMap<String, String>();
-                cData.put("cd.OrderConfirmationChecks", "Order confirmation checking");
+                cData.put("cd.OrderStatus", "Order confirmation checking");
+                cData.put("cd.screenName", "ConfirmFinalOrderScreen");
                 MobileCore.trackState("ConfirmFinalOrderScreen", cData);
                 Check();
             }
@@ -74,7 +75,8 @@ public class ConfirmFinalOrderActivity extends AppCompatActivity {
             bundle.putString(FirebaseAnalytics.Param.METHOD, "Error: Please Provide Your Full Name");
             mFirebaseAnalytics.logEvent("Shipment_Name_Error", bundle);
             HashMap cData = new HashMap<String, String>();
-            cData.put("cd.ShipmentNameError", "Please Provide Your Full Name");
+            cData.put("cd.ShipmentValidError", "Please Provide Your Full Name");
+            cData.put("cd.screenName", "ConfirmFinalOrderScreen");
             MobileCore.trackState("ConfirmFinalOrderScreen", cData);
             Toast.makeText(this,"Please Provide Your Full Name",Toast.LENGTH_SHORT).show();
         }
@@ -84,7 +86,8 @@ public class ConfirmFinalOrderActivity extends AppCompatActivity {
             bundle.putString(FirebaseAnalytics.Param.METHOD, "Error: Please Provide Your Phone Number");
             mFirebaseAnalytics.logEvent("Shipment_PhoneNumber_Error", bundle);
             HashMap cData = new HashMap<String, String>();
-            cData.put("cd.ShipmentPhoneNumberError", "Please Provide Your Phone Number");
+            cData.put("cd.ShipmentValidError", "Please Provide Your Phone Number");
+            cData.put("cd.screenName", "ConfirmFinalOrderScreen");
             MobileCore.trackState("ConfirmFinalOrderScreen", cData);
             Toast.makeText(this,"Please Provide Your Phone Number",Toast.LENGTH_SHORT).show();
         }
@@ -94,7 +97,8 @@ public class ConfirmFinalOrderActivity extends AppCompatActivity {
             bundle.putString(FirebaseAnalytics.Param.METHOD, "Error: Please Provide Your Valid Address");
             mFirebaseAnalytics.logEvent("Shipment_Address_Error", bundle);
             HashMap cData = new HashMap<String, String>();
-            cData.put("cd.ShipmentAddressError", "Please Provide Your Valid Address");
+            cData.put("cd.ShipmentValidError", "Please Provide Your Valid Address");
+            cData.put("cd.screenName", "ConfirmFinalOrderScreen");
             MobileCore.trackState("ConfirmFinalOrderScreen", cData);
             Toast.makeText(this,"Please Provide Your Valid Address.",Toast.LENGTH_SHORT).show();
         }
@@ -104,26 +108,28 @@ public class ConfirmFinalOrderActivity extends AppCompatActivity {
             bundle.putString(FirebaseAnalytics.Param.METHOD, "Error: Please Provide Your City Name");
             mFirebaseAnalytics.logEvent("Shipment_City_Error", bundle);
             HashMap cData = new HashMap<String, String>();
-            cData.put("cd.ShipmentCityError", "Please Provide Your City Name");
+            cData.put("cd.ShipmentValidError", "Please Provide Your City Name");
+            cData.put("cd.screenName", "ConfirmFinalOrderScreen");
             MobileCore.trackState("ConfirmFinalOrderScreen", cData);
             Toast.makeText(this,"Please Provide Your City Name",Toast.LENGTH_SHORT).show();
         }
         else {
             Log.d("Step_name", "Order confirmed");
             Bundle bundle = new Bundle();
-            bundle.putString("Total_Price", String.valueOf(totalAmount));
+            bundle.putString("Shipment_Total_Price", String.valueOf(totalAmount));
             bundle.putString("Shipment_Name", String.valueOf(nameEditText));
             bundle.putString("Shipment_PhoneNumber", String.valueOf(phoneEditText));
             bundle.putString("Shipment_Address", String.valueOf(addressEditText));
             bundle.putString("Shipment_City", String.valueOf(cityEditText));
             mFirebaseAnalytics.logEvent("Cart_OrderConfirmed", bundle);
             HashMap cData = new HashMap<String, String>();
-            cData.put("cd.TotalPrice", String.valueOf(totalAmount));
+            cData.put("cd.ShipmentTotalPrice", String.valueOf(totalAmount));
             cData.put("cd.ShipmentName", String.valueOf(nameEditText));
             cData.put("cd.ShipmentPhoneNumber", String.valueOf(phoneEditText));
             cData.put("cd.ShipmentAddress", String.valueOf(addressEditText));
             cData.put("cd.ShipmentCity", String.valueOf(cityEditText));
-            cData.put("cd.CartOrderConfirmed", "Order confirmed");
+            cData.put("cd.OrderStatus", "Order confirmed");
+            cData.put("cd.screenName", "ConfirmFinalOrderScreen");
             MobileCore.trackState("ConfirmFinalOrderScreen", cData);
             ConfirmOrder();
         }
@@ -157,7 +163,7 @@ public class ConfirmFinalOrderActivity extends AppCompatActivity {
                                     if (task.isSuccessful()){
                                         Log.d("Step_name", "Your final Order has been placed successfully");
                                         Bundle bundle = new Bundle();
-                                        bundle.putString("Total_Price", String.valueOf(totalAmount));
+                                        bundle.putString("Shipment_Total_Price", String.valueOf(totalAmount));
                                         bundle.putString("Shipment_Name", String.valueOf(nameEditText));
                                         bundle.putString("Shipment_PhoneNumber", String.valueOf(phoneEditText));
                                         bundle.putString("Shipment_Address", String.valueOf(addressEditText));
@@ -167,15 +173,15 @@ public class ConfirmFinalOrderActivity extends AppCompatActivity {
                                         bundle.putString("Shipment_State", "Not Shipped");
                                         mFirebaseAnalytics.logEvent("Cart_OrderPlaced", bundle);
                                         HashMap cData = new HashMap<String, String>();
-                                        cData.put("cd.TotalPrice", String.valueOf(totalAmount));
+                                        cData.put("cd.ShipmentTotalPrice", String.valueOf(totalAmount));
                                         cData.put("cd.ShipmentName", String.valueOf(nameEditText));
                                         cData.put("cd.ShipmentPhoneNumber", String.valueOf(phoneEditText));
                                         cData.put("cd.ShipmentAddress", String.valueOf(addressEditText));
                                         cData.put("cd.ShipmentCity", String.valueOf(cityEditText));
                                         cData.put("cd.ShipmentDate", saveCurrentDate);
                                         cData.put("cd.ShipmentTime", saveCurrentTime);
-                                        cData.put("cd.ShipmentState", "Not Shipped");
-                                        cData.put("cd.CartOrderPlaced", "Order Placed");
+                                        cData.put("cd.OrderStatus", "Order Placed and Not Shipped");
+                                        cData.put("cd.screenName", "ConfirmFinalOrderScreen");
                                         MobileCore.trackState("ConfirmFinalOrderScreen", cData);
                                         Toast.makeText(ConfirmFinalOrderActivity.this,"Your final Order has been placed successfully.",Toast.LENGTH_SHORT).show();
                                         Intent intent = new Intent(ConfirmFinalOrderActivity.this,HomeActivity.class);

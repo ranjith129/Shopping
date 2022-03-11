@@ -19,7 +19,6 @@ import com.adobe.marketing.mobile.MobileCore;
 import com.adobe.marketing.mobile.Signal;
 import com.adobe.marketing.mobile.Target;
 import com.adobe.marketing.mobile.UserProfile;
-
 import java.util.HashMap;
 
 public class SplashScreenActivity extends AppCompatActivity {
@@ -35,6 +34,7 @@ public class SplashScreenActivity extends AppCompatActivity {
         MobileCore.setLogLevel(LoggingMode.DEBUG);
         HashMap cData = new HashMap<String, String>();
         cData.put("cd.AppStarted", "App Splash Screen Started");
+        cData.put("cd.screenName", "FlashScreen");
         MobileCore.trackState("FlashScreen", cData);
         startActivity(new Intent(SplashScreenActivity.this, MainActivity.class));
         finish();

@@ -70,7 +70,8 @@ public class ProductDetailsActivity extends AppCompatActivity {
                     bundle.putString("Order_State", "Order Placed/Shipped");
                     mFirebaseAnalytics.logEvent("Order_State", bundle);
                     HashMap cData = new HashMap<String, String>();
-                    cData.put("cd.OrderState", "Order Placed/Shipped");
+                    cData.put("cd.OrderStatus", "Order Placed/Shipped");
+                    cData.put("cd.screenName", "ProductDetailsScreen");
                     MobileCore.trackState("ProductDetailsScreen", cData);
                     Toast.makeText(ProductDetailsActivity.this,"You can add Purchase more product, once your order is shipped or confirmed.",Toast.LENGTH_LONG).show();
                 }
@@ -81,7 +82,8 @@ public class ProductDetailsActivity extends AppCompatActivity {
                     bundle.putString("AddToCart", "Item added into cart");
                     mFirebaseAnalytics.logEvent("AddToCart", bundle);
                     HashMap cData = new HashMap<String, String>();
-                    cData.put("cd.AddToCart", "Item added into cart");
+                    cData.put("cd.CartItemStatus", "Item added into cart");
+                    cData.put("cd.screenName", "ProductDetailsScreen");
                     MobileCore.trackState("ProductDetailsScreen", cData);
                     addingToCartList();
                 }
@@ -116,37 +118,35 @@ public class ProductDetailsActivity extends AppCompatActivity {
             @Override
             public void onComplete(@NonNull Task<Void> task) {
                 if (task.isSuccessful()){
-                    cartListRef.child("Admin view").child(Prevalent.currentOnlineUser.getPhone())
-                            .child("Products").child(productID)
-                            .updateChildren(cartMap)
-                            .addOnCompleteListener(new OnCompleteListener<Void>() {
-                                @Override
-                                public void onComplete(@NonNull Task<Void> task) {
-                                    if (task.isSuccessful()){
-                                        Log.d("Step_name", "Item Added to cart List");
-                                        Bundle bundle = new Bundle();
-                                        bundle.putString("Product_Price", String.valueOf(productPrice));
-                                        bundle.putString("Product_Name", String.valueOf(productName));
-                                        bundle.putString("Product_ID", String.valueOf(productID));
-                                        bundle.putString("Quantity", String.valueOf(numberButton));
-                                        bundle.putString("Date", saveCurrentDate);
-                                        bundle.putString("Time", saveCurrentTime);
-                                        mFirebaseAnalytics.logEvent("AddToCart_ItemsList", bundle);
-                                        HashMap cData = new HashMap<String, String>();
-                                        cData.put("cd.ProductID", String.valueOf(productID));
-                                        cData.put("cd.ProductName", String.valueOf(productName));
-                                        cData.put("cd.ProductPrice", String.valueOf(productPrice));
-                                        cData.put("cd.Quantity", String.valueOf(numberButton));
-                                        cData.put("cd.Date", saveCurrentDate);
-                                        cData.put("cd.Time", saveCurrentTime);
-                                        cData.put("cd.AddToCartItemsList", "Item Added to cart List");
-                                        MobileCore.trackState("ProductDetailsScreen", cData);
-                                        Toast.makeText(ProductDetailsActivity.this,"Added to cart List",Toast.LENGTH_SHORT).show();
-                                        Intent intent = new Intent(ProductDetailsActivity.this,HomeActivity.class);
-                                        startActivity(intent);
-                                    }
-                                }
-                            });
+                    cartListRef.child("Admin view").child(Prevalent.currentOnlineUser.getPhone()).child("Products").child(productID).updateChildren(cartMap).addOnCompleteListener(new OnCompleteListener<Void>() {
+                        @Override
+                        public void onComplete(@NonNull Task<Void> task) {
+                            if (task.isSuccessful()){
+                                Log.d("Step_name", "Item Added to cart List");
+                                Bundle bundle = new Bundle();
+                                bundle.putString("Product_Price", String.valueOf(productPrice));
+                                bundle.putString("Product_Name", String.valueOf(productName));
+                                bundle.putString("Product_ID", String.valueOf(productID));
+                                bundle.putString("Quantity", String.valueOf(numberButton));
+                                bundle.putString("Date", saveCurrentDate);
+                                bundle.putString("Time", saveCurrentTime);
+                                mFirebaseAnalytics.logEvent("AddToCart_ItemsList", bundle);
+                                HashMap cData = new HashMap<String, String>();
+                                cData.put("cd.ProductID", String.valueOf(productID));
+                                cData.put("cd.ProductName", String.valueOf(productName));
+                                cData.put("cd.ProductPrice", String.valueOf(productPrice));
+                                cData.put("cd.Quantity", String.valueOf(numberButton));
+                                cData.put("cd.Date", saveCurrentDate);
+                                cData.put("cd.Time", saveCurrentTime);
+                                cData.put("cd.CartItemStatus", "Item Added to cart List");
+                                cData.put("cd.screenName", "ProductDetailsScreen");
+                                MobileCore.trackState("ProductDetailsScreen", cData);
+                                Toast.makeText(ProductDetailsActivity.this,"Added to cart List",Toast.LENGTH_SHORT).show();
+                                Intent intent = new Intent(ProductDetailsActivity.this,HomeActivity.class);
+                                startActivity(intent);
+                            }
+                        }
+                    });
                 }
             }
         });
@@ -175,7 +175,8 @@ public class ProductDetailsActivity extends AppCompatActivity {
                     cData.put("cd.ProductName", String.valueOf(productName));
                     cData.put("cd.ProductPrice", String.valueOf(productPrice));
                     cData.put("cd.ProductImageUrl", String.valueOf(productImage));
-                    cData.put("cd.GetProductDetails", "Getting product details from DB");
+                    cData.put("cd.ProductDetailView", "Getting product details from DB");
+                    cData.put("cd.screenName", "ProductDetailsScreen");
                     MobileCore.trackState("ProductDetailsScreen", cData);
                 }
             }
@@ -187,7 +188,8 @@ public class ProductDetailsActivity extends AppCompatActivity {
                 bundle.putString(FirebaseAnalytics.Param.METHOD,"Getting product details from DB Cancelled");
                 mFirebaseAnalytics.logEvent("Get_ProductDetails_Cancelled", bundle);
                 HashMap cData = new HashMap<String, String>();
-                cData.put("cd.GetProductDetailsCancelled", "Getting product details from DB Cancelled");
+                cData.put("cd.ProductDetailView", "Getting product details from DB Cancelled");
+                cData.put("cd.screenName", "ProductDetailsScreen");
                 MobileCore.trackState("ProductDetailsScreen", cData);
             }
         });
@@ -209,7 +211,8 @@ public class ProductDetailsActivity extends AppCompatActivity {
                         bundle.putString("Checking_Order_State", "Product Order Shipped");
                         mFirebaseAnalytics.logEvent("Check_OrderState", bundle);
                         HashMap cData = new HashMap<String, String>();
-                        cData.put("cd.CheckingOrderState", "Product Order Shipped");
+                        cData.put("cd.OrderStatus", "Product Order Shipped");
+                        cData.put("cd.screenName", "ProductDetailsScreen");
                         MobileCore.trackState("ProductDetailsScreen", cData);
                     }
                     else if (shippingState.equals("Not Shipped")){
@@ -219,7 +222,8 @@ public class ProductDetailsActivity extends AppCompatActivity {
                         bundle.putString("Checking_Order_State", "Product Order Placed");
                         mFirebaseAnalytics.logEvent("Check_OrderState", bundle);
                         HashMap cData = new HashMap<String, String>();
-                        cData.put("cd.CheckingOrderState", "Product Order Placed");
+                        cData.put("cd.OrderStatus", "Product Order Placed");
+                        cData.put("cd.screenName", "ProductDetailsScreen");
                         MobileCore.trackState("ProductDetailsScreen", cData);
                     }
                 }
@@ -232,7 +236,8 @@ public class ProductDetailsActivity extends AppCompatActivity {
                 bundle.putString(FirebaseAnalytics.Param.METHOD,"Product Order Cancelled");
                 mFirebaseAnalytics.logEvent("Check_ProductOrder_Cancelled", bundle);
                 HashMap cData = new HashMap<String, String>();
-                cData.put("cd.CheckProductOrderCancelled", "Product Order Cancelled");
+                cData.put("cd.OrderStatus", "Product Order Cancelled");
+                cData.put("cd.screenName", "ProductDetailsScreen");
                 MobileCore.trackState("ProductDetailsScreen", cData);
             }
         });

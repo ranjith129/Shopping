@@ -52,9 +52,7 @@ public class Products {
         return category;
     }
 
-    public void setCategory(String category) {
-        this.category = category;
-    }
+    public void setCategory(String category) {this.category = category;}
 
     public String getPid() {
         return pid;

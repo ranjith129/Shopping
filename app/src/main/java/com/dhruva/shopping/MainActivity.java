@@ -65,7 +65,7 @@ public class MainActivity extends AppCompatActivity {
         bundle.putString("App_Open", "Application Opened");
         HashMap cData = new HashMap<String, String>();
         cData.put("cd.AppOpened", "Main Activity");
-
+        cData.put("cd.screenName", "MainScreen");
         try{
             Target.registerExtension();
             Analytics.registerExtension();
@@ -91,6 +91,10 @@ public class MainActivity extends AppCompatActivity {
                 Bundle bundle = new Bundle();
                 bundle.putString(FirebaseAnalytics.Param.METHOD, "Button: Navigated to Login Section");
                 mFirebaseAnalytics.logEvent(FirebaseAnalytics.Event.LOGIN, bundle);
+                HashMap cData = new HashMap<String, String>();
+                cData.put("cd.NavigationType", "Navigated to Login Section");
+                cData.put("cd.screenName", "MainScreen");
+                MobileCore.trackState("MainScreen", cData);
                 Intent intent = new Intent(MainActivity.this, LoginActivity.class);
                 startActivity(intent);
             }
@@ -106,7 +110,8 @@ public class MainActivity extends AppCompatActivity {
                 //mFirebaseAnalytics.logEvent("button_clicked",null);
                 mFirebaseAnalytics.logEvent(FirebaseAnalytics.Event.SIGN_UP, bundle);
                 HashMap cData = new HashMap<String, String>();
-                cData.put("cd.SignUpNavigation", "Navigated to Sign in screen");
+                cData.put("cd.NavigationType", "Navigated to Sign in screen");
+                cData.put("cd.screenName", "MainScreen");
                 MobileCore.trackState("MainScreen", cData);
                 Intent intent = new Intent(MainActivity.this, RegisterActivity.class);
                 startActivity(intent);
@@ -124,7 +129,8 @@ public class MainActivity extends AppCompatActivity {
                 // Bundle bundle = new Bundle();
                 bundle.putString(FirebaseAnalytics.Param.METHOD, "Message: Getting Logged in");
                 mFirebaseAnalytics.logEvent("Logged_In", bundle);
-                cData.put("cd.GettingLogIn", "Getting Logged in");
+                cData.put("cd.LoginType", "Getting Logged in");
+                cData.put("cd.screenName", "MainScreen");
                 MobileCore.trackState("MainScreen", cData);
                 loadingBar.setTitle("Already Logged in.");
                 loadingBar.setMessage("Please wait for few moments.");
@@ -132,9 +138,7 @@ public class MainActivity extends AppCompatActivity {
                 loadingBar.show();
             }
         }
-
     }
-
 
     private void AllowAccess(final String phone, final String password)
     {
@@ -154,7 +158,8 @@ public class MainActivity extends AppCompatActivity {
                             bundle.putString(FirebaseAnalytics.Param.METHOD, "Message: Already logged in");
                             mFirebaseAnalytics.logEvent("Already_LoggedIn", bundle);
                             HashMap cData = new HashMap<String, String>();
-                            cData.put("cd.AlreadyLoggedIn", "Already logged in");
+                            cData.put("cd.LoggedType", "Already logged in");
+                            cData.put("cd.screenName", "MainScreen");
                             MobileCore.trackState("MainScreen", cData);
                             Toast.makeText(MainActivity.this, "Please wait, you are already logged in.", Toast.LENGTH_SHORT).show();
                             loadingBar.dismiss();
@@ -168,7 +173,8 @@ public class MainActivity extends AppCompatActivity {
                             bundle.putString(FirebaseAnalytics.Param.METHOD, "Error: Login Password Incorrect");
                             mFirebaseAnalytics.logEvent("Login_Password_Incorrect", bundle);
                             HashMap cData = new HashMap<String, String>();
-                            cData.put("cd.LoginPasswordIncorrect", "Login Password Incorrect");
+                            cData.put("cd.InputError", "Login Password Incorrect");
+                            cData.put("cd.screenName", "MainScreen");
                             MobileCore.trackState("MainScreen", cData);
                             loadingBar.dismiss();
                             Toast.makeText(MainActivity.this,"Password is incorrect. Enter correct password to proceed.",Toast.LENGTH_SHORT).show();
@@ -181,7 +187,8 @@ public class MainActivity extends AppCompatActivity {
                     bundle.putString(FirebaseAnalytics.Param.METHOD, "Error: Phone number do not exists");
                     mFirebaseAnalytics.logEvent("Login_PhoneNumber_DoNotExists", bundle);
                     HashMap cData = new HashMap<String, String>();
-                    cData.put("cd.LoginPhoneNumberDoNotExists", "Phone number do not exists");
+                    cData.put("cd.InputError", "Phone number do not exists");
+                    cData.put("cd.screenName", "MainScreen");
                     MobileCore.trackState("MainScreen", cData);
                     Toast.makeText(MainActivity.this, "Account with this " + phone + " number do not exists.", Toast.LENGTH_SHORT).show();
                     loadingBar.dismiss();
@@ -195,7 +202,8 @@ public class MainActivity extends AppCompatActivity {
                 bundle.putString(FirebaseAnalytics.Param.METHOD, "Message: Login Operation Cancelled");
                 mFirebaseAnalytics.logEvent("Login_Operation_Cancelled", bundle);
                 HashMap cData = new HashMap<String, String>();
-                cData.put("cd.LoginOperationCancelled", "Login Operation Cancelled");
+                cData.put("cd.LoginType", "Login Operation Cancelled");
+                cData.put("cd.screenName", "MainScreen");
                 MobileCore.trackState("MainScreen", cData);
             }
         });
@@ -207,13 +215,21 @@ public class MainActivity extends AppCompatActivity {
         MobileCore.setApplication(getApplication());
         HashMap cData = new HashMap<String, String>();
         cData.put("cd.category", "Shopping");
+        cData.put("cd.ActivityType", "Activity on Resumed");
+        cData.put("cd.screenName", "MainScreen");
         //MobileCore.trackState("Login Screen", cData);
         MobileCore.lifecycleStart(cData);
+        MobileCore.trackState("MainScreen", cData);
     }
 
     @Override
     public void onPause() {
         super.onPause();
         MobileCore.lifecyclePause();
+        HashMap cData = new HashMap<String, String>();
+        cData.put("cd.category", "Shopping");
+        cData.put("cd.ActivityType", "Activity on Paused");
+        cData.put("cd.screenName", "MainScreen");
+        MobileCore.trackState("MainScreen", cData);
     }
 }

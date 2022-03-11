@@ -1,6 +1,6 @@
 package com.dhruva.shopping.Model;
 public class Cart {
-    private String pid,pname,price,quantity,discount;
+    private String pid,pname,price,quantity,discount,date,time;
 
     public Cart() { }
 
@@ -10,6 +10,8 @@ public class Cart {
         this.price = price;
         this.quantity = quantity;
         this.discount = discount;
+        this.date = date;
+        this.time = time;
     }
 
     public String getPid() { return pid; }
@@ -31,4 +33,20 @@ public class Cart {
     public String getDiscount() { return discount; }
 
     public void setDiscount(String discount) { this.discount = discount; }
+
+    public String getDate() {
+        return date;
+    }
+
+    public void setDate(String date) {
+        this.date = date;
+    }
+
+    public String getTime() {
+        return time;
+    }
+
+    public void setTime(String time) {
+        this.time = time;
+    }
 }
