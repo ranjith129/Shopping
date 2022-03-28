@@ -15,25 +15,27 @@
         android:layout_marginTop="50dp"
         android:layout_marginBottom="50dp"
         />
+
     <EditText
         android:id="@+id/login_phone_number_input"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:layout_below="@+id/login_applogo"
-        android:background="@drawable/input_design"
-        android:padding="15dp"
         android:layout_marginLeft="15dp"
         android:layout_marginRight="15dp"
-        android:hint="Phone Number"
-        android:inputType="number"
-        android:textColor="#333333"
-        android:textColorHint="#333333"
-        android:textSize="16dp"
+        android:background="@drawable/input_design"
+        android:cursorVisible="true"
+        android:focusable="true"
+        android:focusableInTouchMode="true"
+        android:textCursorDrawable="@null"
         android:drawableStart="@drawable/phone"
         android:drawablePadding="10dp"
-        android:cursorVisible="true"
-        android:textCursorDrawable="@null"
-        />
+        android:hint="Phone Number"
+        android:inputType="number"
+        android:padding="15dp"
+        android:textColor="#333333"
+        android:textColorHint="#333333"
+        android:textSize="16dp" />
 
     <EditText
         android:id="@+id/login_password_input"
@@ -53,6 +55,8 @@
         android:textColorHint="#333333"
         android:textSize="16dp"
         android:cursorVisible="true"
+        android:focusable="true"
+        android:focusableInTouchMode="true"
         android:textCursorDrawable="@null" />
 
     <LinearLayout

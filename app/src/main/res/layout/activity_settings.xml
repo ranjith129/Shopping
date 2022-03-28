@@ -92,8 +92,11 @@
         android:textColorHint="#333333"
         android:background="@drawable/input_design"
         android:cursorVisible="true"
+        android:focusable="true"
+        android:focusableInTouchMode="true"
         android:textCursorDrawable="@null"
         android:importantForAutofill="no"
+        android:inputType="number"
         />
 
     <EditText
@@ -109,6 +112,8 @@
         android:textColorHint="#333333"
         android:background="@drawable/input_design"
         android:cursorVisible="true"
+        android:focusable="true"
+        android:focusableInTouchMode="true"
         android:textCursorDrawable="@null"
         />
 
@@ -130,6 +135,22 @@
         android:scrollbars="vertical"
         android:lines="6"
         android:cursorVisible="true"
+        android:focusable="true"
+        android:focusableInTouchMode="true"
         android:textCursorDrawable="@null"
         />
+    <Button
+        android:id="@+id/security_questions_btn"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="10dp"
+        android:layout_margin="10dp"
+        android:background="@drawable/buttons"
+        android:padding="10dp"
+        android:textAllCaps="false"
+        android:textSize="20dp"
+        android:text="Set Security Questions"
+        android:layout_alignParentBottom="true"
+        android:textColor="#ffffff" />
+
 </RelativeLayout>

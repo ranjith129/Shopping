@@ -1,4 +1,4 @@
-package com.dhruva.shopping;
+package com.dhruva.shopping.Admin;
 import android.os.Bundle;
 import android.util.Log;
 import android.view.LayoutInflater;
@@ -10,6 +10,7 @@ import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 import com.dhruva.shopping.Model.Cart;
 import com.dhruva.shopping.Prevalent.CartViewHolder;
+import com.dhruva.shopping.R;
 import com.firebase.ui.database.FirebaseRecyclerAdapter;
 import com.firebase.ui.database.FirebaseRecyclerOptions;
 import com.google.firebase.analytics.FirebaseAnalytics;

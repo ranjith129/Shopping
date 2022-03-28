@@ -18,6 +18,8 @@ import android.view.ViewGroup;
 import android.widget.TextView;
 import android.widget.Toast;
 import androidx.appcompat.widget.Toolbar;
+
+import com.dhruva.shopping.Admin.AdminMaintainProductsActivity;
 import com.dhruva.shopping.Model.Products;
 import com.dhruva.shopping.Prevalent.Prevalent;
 import com.dhruva.shopping.ViewHolder.ProductViewHolder;
@@ -31,16 +33,8 @@ import com.google.firebase.database.FirebaseDatabase;
 import com.squareup.picasso.Picasso;
 import de.hdodenhof.circleimageview.CircleImageView;
 import io.paperdb.Paper;
-import com.adobe.marketing.mobile.AdobeCallback;
-import com.adobe.marketing.mobile.Analytics;
-import com.adobe.marketing.mobile.Identity;
-import com.adobe.marketing.mobile.InvalidInitException;
-import com.adobe.marketing.mobile.Lifecycle;
-import com.adobe.marketing.mobile.LoggingMode;
+
 import com.adobe.marketing.mobile.MobileCore;
-import com.adobe.marketing.mobile.Signal;
-import com.adobe.marketing.mobile.Target;
-import com.adobe.marketing.mobile.UserProfile;
 
 import java.util.HashMap;
 
@@ -53,6 +47,7 @@ public class HomeActivity extends AppCompatActivity implements NavigationView.On
     private RecyclerView recyclerView;
     RecyclerView.LayoutManager layoutManager;
     private FirebaseAnalytics mFirebaseAnalytics;
+    private String type ="";
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -62,6 +57,13 @@ public class HomeActivity extends AppCompatActivity implements NavigationView.On
         super.onCreate(savedInstanceState);
         mFirebaseAnalytics = FirebaseAnalytics.getInstance(this);
         setContentView(R.layout.activity_home);
+        Intent intent = getIntent();
+        Bundle bundle = intent.getExtras();
+        if(bundle != null)
+        {
+            type = getIntent().getExtras().get("Admin").toString();
+        }
+
         AppCompatDelegate.setDefaultNightMode(AppCompatDelegate.MODE_NIGHT_YES);
         ProductsRef = FirebaseDatabase.getInstance().getReference().child("Products");
         drawerLayout=findViewById(R.id.drawer_layout);
@@ -78,8 +80,18 @@ public class HomeActivity extends AppCompatActivity implements NavigationView.On
         View headerView = navigationView.getHeaderView(0);
         TextView userNameTextView = headerView.findViewById(R.id.user_profile_name);
         CircleImageView profileImageView = headerView.findViewById(R.id.user_profile_image);
-        userNameTextView.setText(Prevalent.currentOnlineUser.getName());
-        Picasso.get().load(Prevalent.currentOnlineUser.getImage()).placeholder(R.drawable.profile).into(profileImageView);
+
+        if(!type.equals("Admin")){
+            userNameTextView.setText(Prevalent.currentOnlineUser.getName());
+            Picasso.get().load(Prevalent.currentOnlineUser.getImage()).placeholder(R.drawable.profile).into(profileImageView);
+        }else {
+            FloatingActionButton fab = (FloatingActionButton) findViewById(R.id.fab);
+            navigationView=findViewById(R.id.nav_view);
+            toolbar = (Toolbar) findViewById(R.id.toolbar);
+            toolbar.setVisibility(View.GONE);
+            navigationView.setVisibility(View.GONE);
+            fab.setVisibility(View.GONE);
+        }
         recyclerView = findViewById(R.id.recycler_menu);
         recyclerView.setHasFixedSize(true);
         layoutManager = new LinearLayoutManager(this);
@@ -116,6 +128,7 @@ public class HomeActivity extends AppCompatActivity implements NavigationView.On
                         holder.txtProductDescription.setText(model.getDescription());
                         holder.txtProductPrice.setText("Price: Rs" + model.getPrice());
                         Picasso.get().load(model.getImage()).into(holder.imageView);
+
                         holder.itemView.setOnClickListener(new View.OnClickListener() {
                             @Override
                             public void onClick(View view) {
@@ -135,9 +148,17 @@ public class HomeActivity extends AppCompatActivity implements NavigationView.On
                                 cData.put("cd.ProductDetailView", "Product details view");
                                 cData.put("cd.screenName", "HomeScreen");
                                 MobileCore.trackState("HomeScreen", cData);
-                                Intent intent =new Intent(HomeActivity.this,ProductDetailsActivity.class);
-                                intent.putExtra("pid",model.getPid());
-                                startActivity(intent);
+
+                                if(type.equals("Admin")){
+                                    Intent intent =new Intent(HomeActivity.this, AdminMaintainProductsActivity.class);
+                                    intent.putExtra("pid",model.getPid());
+                                    startActivity(intent);
+                                }else {
+                                    Intent intent =new Intent(HomeActivity.this,ProductDetailsActivity.class);
+                                    intent.putExtra("pid",model.getPid());
+                                    startActivity(intent);
+                                }
+
                             }
                         });
                     }

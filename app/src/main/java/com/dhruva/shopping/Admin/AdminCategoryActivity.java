@@ -1,4 +1,4 @@
-package com.dhruva.shopping;
+package com.dhruva.shopping.Admin;
 import android.os.Bundle;
 import android.util.Log;
 import android.widget.Button;
@@ -6,17 +6,12 @@ import android.widget.ImageView;
 import android.view.View;
 import android.content.Intent;
 import androidx.appcompat.app.AppCompatActivity;
+
+import com.dhruva.shopping.HomeActivity;
+import com.dhruva.shopping.MainActivity;
+import com.dhruva.shopping.R;
 import com.google.firebase.analytics.FirebaseAnalytics;
-import com.adobe.marketing.mobile.AdobeCallback;
-import com.adobe.marketing.mobile.Analytics;
-import com.adobe.marketing.mobile.Identity;
-import com.adobe.marketing.mobile.InvalidInitException;
-import com.adobe.marketing.mobile.Lifecycle;
-import com.adobe.marketing.mobile.LoggingMode;
 import com.adobe.marketing.mobile.MobileCore;
-import com.adobe.marketing.mobile.Signal;
-import com.adobe.marketing.mobile.Target;
-import com.adobe.marketing.mobile.UserProfile;
 
 import java.util.HashMap;
 
@@ -24,7 +19,7 @@ public class AdminCategoryActivity extends AppCompatActivity {
     private ImageView tShirts, sportsTShirts, femaleDresses, sweathers;
     private ImageView glasses, hatsCaps, walletsBagsPurses, shoes;
     private ImageView headPhonesHandFree, Laptops, watches, mobilePhones;
-    private Button LogoutBtn, CheckOrdersBtn;
+    private Button LogoutBtn, CheckOrdersBtn, MaintainProductsBtn;
     private FirebaseAnalytics mFirebaseAnalytics;
 
     @Override
@@ -47,13 +42,25 @@ public class AdminCategoryActivity extends AppCompatActivity {
                 cData.put("cd.LogoutType", "Navigation to Logout (Main) Screen");
                 cData.put("cd.screenName", "AdminCategoryScreen");
                 MobileCore.trackState("AdminCategoryScreen", cData);
-                Intent intent= new Intent(AdminCategoryActivity.this,MainActivity.class);
+                Intent intent= new Intent(AdminCategoryActivity.this, MainActivity.class);
                 intent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TASK | Intent.FLAG_ACTIVITY_CLEAR_TASK);
                 startActivity(intent);
                 finish();
             }
         });
         CheckOrdersBtn = (Button) findViewById(R.id.check_orders_btn);
+        MaintainProductsBtn = (Button) findViewById(R.id.maintain_btn);
+
+        MaintainProductsBtn.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                Intent intent= new Intent(AdminCategoryActivity.this, HomeActivity.class);
+                intent.putExtra("Admin","Admin");
+                startActivity(intent);
+            }
+        });
+
+
         CheckOrdersBtn.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
@@ -65,7 +72,7 @@ public class AdminCategoryActivity extends AppCompatActivity {
                 cData.put("cd.OrderStatus", "Check the orders");
                 cData.put("cd.screenName", "AdminCategoryScreen");
                 MobileCore.trackState("AdminCategoryScreen", cData);
-                Intent intent= new Intent(AdminCategoryActivity.this,AdminNewOrdersActivity.class);
+                Intent intent= new Intent(AdminCategoryActivity.this, AdminNewOrdersActivity.class);
                 startActivity(intent);
             }
         });
@@ -95,7 +102,7 @@ public class AdminCategoryActivity extends AppCompatActivity {
                 cData.put("cd.ProductUploadStatus", "Product TShirts Uploaded");
                 cData.put("cd.screenName", "AdminCategoryScreen");
                 MobileCore.trackState("AdminCategoryScreen", cData);
-                Intent intent = new Intent(AdminCategoryActivity.this, com.dhruva.shopping.AdminAddNewProductActivity.class);
+                Intent intent = new Intent(AdminCategoryActivity.this, AdminAddNewProductActivity.class);
                 intent.putExtra("category", "tShirts");
                 startActivity(intent);
             }
@@ -113,7 +120,7 @@ public class AdminCategoryActivity extends AppCompatActivity {
                 cData.put("cd.ProductUploadStatus", "Product sports TShirts Uploaded");
                 cData.put("cd.screenName", "AdminCategoryScreen");
                 MobileCore.trackState("AdminCategoryScreen", cData);
-                Intent intent = new Intent(AdminCategoryActivity.this, com.dhruva.shopping.AdminAddNewProductActivity.class);
+                Intent intent = new Intent(AdminCategoryActivity.this, AdminAddNewProductActivity.class);
                 intent.putExtra("category", "Sports tShirts");
                 startActivity(intent);
             }
@@ -131,7 +138,7 @@ public class AdminCategoryActivity extends AppCompatActivity {
                 cData.put("cd.ProductUploadStatus", "Product female Dresses Uploaded");
                 cData.put("cd.screenName", "AdminCategoryScreen");
                 MobileCore.trackState("AdminCategoryScreen", cData);
-                Intent intent = new Intent(AdminCategoryActivity.this, com.dhruva.shopping.AdminAddNewProductActivity.class);
+                Intent intent = new Intent(AdminCategoryActivity.this, AdminAddNewProductActivity.class);
                 intent.putExtra("category", "Dresses");
                 startActivity(intent);
             }
@@ -149,7 +156,7 @@ public class AdminCategoryActivity extends AppCompatActivity {
                 cData.put("cd.ProductUploadStatus", "Product Sweathers Uploaded");
                 cData.put("cd.screenName", "AdminCategoryScreen");
                 MobileCore.trackState("AdminCategoryScreen", cData);
-                Intent intent = new Intent(AdminCategoryActivity.this, com.dhruva.shopping.AdminAddNewProductActivity.class);
+                Intent intent = new Intent(AdminCategoryActivity.this, AdminAddNewProductActivity.class);
                 intent.putExtra("category", "Sweathers");
                 startActivity(intent);
             }
@@ -167,7 +174,7 @@ public class AdminCategoryActivity extends AppCompatActivity {
                 cData.put("cd.ProductUploadStatus", "Product Glasses Uploaded");
                 cData.put("cd.screenName", "AdminCategoryScreen");
                 MobileCore.trackState("AdminCategoryScreen", cData);
-                Intent intent = new Intent(AdminCategoryActivity.this, com.dhruva.shopping.AdminAddNewProductActivity.class);
+                Intent intent = new Intent(AdminCategoryActivity.this, AdminAddNewProductActivity.class);
                 intent.putExtra("category", "Glasses");
                 startActivity(intent);
             }
@@ -185,7 +192,7 @@ public class AdminCategoryActivity extends AppCompatActivity {
                 cData.put("cd.ProductUploadStatus", "Product Hats Caps Uploaded");
                 cData.put("cd.screenName", "AdminCategoryScreen");
                 MobileCore.trackState("AdminCategoryScreen", cData);
-                Intent intent = new Intent(AdminCategoryActivity.this, com.dhruva.shopping.AdminAddNewProductActivity.class);
+                Intent intent = new Intent(AdminCategoryActivity.this, AdminAddNewProductActivity.class);
                 intent.putExtra("category", "Hats Caps");
                 startActivity(intent);
             }
@@ -203,7 +210,7 @@ public class AdminCategoryActivity extends AppCompatActivity {
                 cData.put("cd.ProductUploadStatus", "Product Wallets Bags Purses Uploaded");
                 cData.put("cd.screenName", "AdminCategoryScreen");
                 MobileCore.trackState("AdminCategoryScreen", cData);
-                Intent intent = new Intent(AdminCategoryActivity.this, com.dhruva.shopping.AdminAddNewProductActivity.class);
+                Intent intent = new Intent(AdminCategoryActivity.this, AdminAddNewProductActivity.class);
                 intent.putExtra("category", "Wallets Bags Purses");
                 startActivity(intent);
             }
@@ -221,7 +228,7 @@ public class AdminCategoryActivity extends AppCompatActivity {
                 cData.put("cd.ProductUploadStatus", "Product Shoes Uploaded");
                 cData.put("cd.screenName", "AdminCategoryScreen");
                 MobileCore.trackState("AdminCategoryScreen", cData);
-                Intent intent = new Intent(AdminCategoryActivity.this, com.dhruva.shopping.AdminAddNewProductActivity.class);
+                Intent intent = new Intent(AdminCategoryActivity.this, AdminAddNewProductActivity.class);
                 intent.putExtra("category", "Shoes");
                 startActivity(intent);
             }
@@ -239,7 +246,7 @@ public class AdminCategoryActivity extends AppCompatActivity {
                 cData.put("cd.ProductUploadStatus", "Product HeadPhones Uploaded");
                 cData.put("cd.screenName", "AdminCategoryScreen");
                 MobileCore.trackState("AdminCategoryScreen", cData);
-                Intent intent = new Intent(AdminCategoryActivity.this, com.dhruva.shopping.AdminAddNewProductActivity.class);
+                Intent intent = new Intent(AdminCategoryActivity.this, AdminAddNewProductActivity.class);
                 intent.putExtra("category", "HeadPhones");
                 startActivity(intent);
             }
@@ -257,7 +264,7 @@ public class AdminCategoryActivity extends AppCompatActivity {
                 cData.put("cd.ProductUploadStatus", "Product Laptops Uploaded");
                 cData.put("cd.screenName", "AdminCategoryScreen");
                 MobileCore.trackState("AdminCategoryScreen", cData);
-                Intent intent = new Intent(AdminCategoryActivity.this, com.dhruva.shopping.AdminAddNewProductActivity.class);
+                Intent intent = new Intent(AdminCategoryActivity.this, AdminAddNewProductActivity.class);
                 intent.putExtra("category", "Laptops");
                 startActivity(intent);
             }
@@ -275,7 +282,7 @@ public class AdminCategoryActivity extends AppCompatActivity {
                 cData.put("cd.ProductUploadStatus", "Product Watches Uploaded");
                 cData.put("cd.screenName", "AdminCategoryScreen");
                 MobileCore.trackState("AdminCategoryScreen", cData);
-                Intent intent = new Intent(AdminCategoryActivity.this, com.dhruva.shopping.AdminAddNewProductActivity.class);
+                Intent intent = new Intent(AdminCategoryActivity.this, AdminAddNewProductActivity.class);
                 intent.putExtra("category", "Watches");
                 startActivity(intent);
             }
@@ -293,7 +300,7 @@ public class AdminCategoryActivity extends AppCompatActivity {
                 cData.put("cd.ProductUploadStatus", "Product Mobile Phones Uploaded");
                 cData.put("cd.screenName", "AdminCategoryScreen");
                 MobileCore.trackState("AdminCategoryScreen", cData);
-                Intent intent = new Intent(AdminCategoryActivity.this, com.dhruva.shopping.AdminAddNewProductActivity.class);
+                Intent intent = new Intent(AdminCategoryActivity.this, AdminAddNewProductActivity.class);
                 intent.putExtra("category", "Mobile Phones");
                 startActivity(intent);
             }

@@ -55,18 +55,18 @@ public class SearchProductsActivity extends AppCompatActivity {
             @Override
             public void onClick(View view) {
                 searchInput = inputText.getText().toString();
-                onStart();
                 Log.d("Step_name", "Searched given item name");
                 Bundle bundle = new Bundle();
                 bundle.putString(FirebaseAnalytics.Param.METHOD, "Button: Searched given item name");
                 mFirebaseAnalytics.logEvent(FirebaseAnalytics.Event.SEARCH, bundle);
                 HashMap cData = new HashMap<String, String>();
-                cData.put("cd.SearchProduct", "Searched given item name");
+                cData.put("cd.SearchedProduct", searchInput);
+                cData.put("cd.Searched", "Searched given item name");
                 cData.put("cd.screenName", "SearchProductScreen");
                 MobileCore.trackState("SearchProductScreen", cData);
+                onStart();
             }
         });
-
     }
 
     @Override
@@ -76,7 +76,8 @@ public class SearchProductsActivity extends AppCompatActivity {
         FirebaseRecyclerOptions<Products> options = new FirebaseRecyclerOptions.Builder<Products>()
                 .setQuery(reference.orderByChild("pname").startAt(searchInput), Products.class)
                 .build();
-        FirebaseRecyclerAdapter<Products, ProductViewHolder> adapter = new FirebaseRecyclerAdapter<Products, ProductViewHolder>(options) {
+        FirebaseRecyclerAdapter<Products, ProductViewHolder> adapter =
+                new FirebaseRecyclerAdapter<Products, ProductViewHolder>(options) {
             @Override
             protected void onBindViewHolder(@NonNull ProductViewHolder holder, int position, @NonNull final Products model) {
                 holder.txtProductName.setText(model.getPname());
@@ -103,7 +104,7 @@ public class SearchProductsActivity extends AppCompatActivity {
                         cData.put("cd.screenName", "SearchProductScreen");
                         MobileCore.trackState("SearchProductScreen", cData);
                         Intent intent =new Intent(SearchProductsActivity.this,ProductDetailsActivity.class);
-                        intent.putExtra("pid",model.getPid());
+                         intent.putExtra("pid", model.getPid());
                         startActivity(intent);
                     }
                 });

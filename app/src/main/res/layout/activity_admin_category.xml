@@ -5,7 +5,7 @@
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:background="@color/white"
-    tools:context=".AdminCategoryActivity">
+    tools:context=".Admin.AdminCategoryActivity">
 
     <TextView
         android:id="@+id/slogan_category"
@@ -215,6 +215,20 @@
 
     </LinearLayout>
 
+    <Button
+        android:id="@+id/maintain_btn"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_above="@+id/check_orders_btn"
+        android:layout_marginLeft="20dp"
+        android:layout_marginRight="20dp"
+        android:layout_marginBottom="10dp"
+        android:background="@drawable/buttons"
+        android:text="Maintain Products"
+        android:textAllCaps="false"
+        android:textColor="#ffffff"
+        android:textSize="16dp"
+        android:padding="10dp"/>
     <Button
         android:id="@+id/check_orders_btn"
         android:layout_width="match_parent"
