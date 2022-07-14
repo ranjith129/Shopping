@@ -1,10 +1,10 @@
 package com.dhruva.shopping.Model;
 public class Cart {
-    private String pid,pname,price,quantity,discount,date,time;
+    private String pid, pname, price, quantity, discount, date, time, customeruniqueid;
 
     public Cart() { }
 
-    public Cart(String pid, String pname, String price, String quantity, String discount) {
+    public Cart(String pid, String pname, String price, String quantity, String discount, String customeruniqueid) {
         this.pid = pid;
         this.pname = pname;
         this.price = price;
@@ -12,6 +12,7 @@ public class Cart {
         this.discount = discount;
         this.date = date;
         this.time = time;
+        this.customeruniqueid = customeruniqueid;
     }
 
     public String getPid() { return pid; }
@@ -49,4 +50,8 @@ public class Cart {
     public void setTime(String time) {
         this.time = time;
     }
+
+    public String getCustomerUniqueID() { return customeruniqueid; }
+
+    public void setCustomerUniqueID(String CustomerUniqueID) { this.customeruniqueid = customeruniqueid; }
 }

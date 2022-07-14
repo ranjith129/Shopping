@@ -1,16 +1,20 @@
 package com.dhruva.shopping;
+
 import android.app.ProgressDialog;
 import android.content.Intent;
 import android.os.Bundle;
 import android.text.TextUtils;
 import android.util.Log;
 import android.view.View;
-import android.view.WindowManager;
 import android.widget.Button;
 import android.widget.EditText;
 import android.widget.Toast;
+
 import androidx.annotation.NonNull;
 import androidx.appcompat.app.AppCompatActivity;
+
+import com.adobe.marketing.mobile.MobileCore;
+import com.dhruva.shopping.Prevalent.Prevalent;
 import com.google.android.gms.tasks.OnCompleteListener;
 import com.google.android.gms.tasks.Task;
 import com.google.firebase.analytics.FirebaseAnalytics;
@@ -19,23 +23,18 @@ import com.google.firebase.database.DatabaseError;
 import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.FirebaseDatabase;
 import com.google.firebase.database.ValueEventListener;
+
 import java.util.HashMap;
-import com.adobe.marketing.mobile.AdobeCallback;
-import com.adobe.marketing.mobile.Analytics;
-import com.adobe.marketing.mobile.Identity;
-import com.adobe.marketing.mobile.InvalidInitException;
-import com.adobe.marketing.mobile.Lifecycle;
-import com.adobe.marketing.mobile.LoggingMode;
-import com.adobe.marketing.mobile.MobileCore;
-import com.adobe.marketing.mobile.Signal;
-import com.adobe.marketing.mobile.Target;
-import com.adobe.marketing.mobile.UserProfile;
+import java.util.UUID;
+
+import io.paperdb.Paper;
 
 public class RegisterActivity extends AppCompatActivity {
     private Button CreateAccountButton;
     private EditText InputName, InputPhoneNumber, InputPassword;
     private ProgressDialog loadingBar;
     private FirebaseAnalytics mFirebaseAnalytics;
+    //private TextView RegisterCustomerUniqueID;
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         if (getSupportActionBar() != null) {
@@ -57,10 +56,12 @@ public class RegisterActivity extends AppCompatActivity {
             }
         });
     }
+
     private void CreateAccount(){
         String name = InputName.getText().toString();
         String phone = InputPhoneNumber.getText().toString();
         String password = InputPassword.getText().toString();
+
         if (TextUtils.isEmpty(name))
         {
             Log.d("Step_name", "Enter your name");
@@ -128,28 +129,36 @@ public class RegisterActivity extends AppCompatActivity {
             HashMap cData = new HashMap<String, String>();
             cData.put("cd.InputError", "Enter valid password");
             cData.put("cd.screenName", "SignUpScreen");
-            MobileCore.trackState("SignUpScreen", cData);
+            MobileCore.trackAction("SignUpScreen", cData);
             Toast.makeText(this, "Please enter valid password. Password Hint: Password required combined with following all one digit/lower/upper/special character with maximum 8 to 20 characters", Toast.LENGTH_SHORT).show();
         }
         else
         {
+            String cuniqueid = null;
+            if(cuniqueid == null) {
+                cuniqueid = UUID.randomUUID().toString();
+            }
+            Log.d("cuniqueid", cuniqueid);
+            Paper.book().write(Prevalent.CustomerUniqueID, cuniqueid);
             loadingBar.setTitle("Create Account");
             loadingBar.setMessage("Please wait, while we are checking the credentials.");
             Log.d("Step_name", "Create Account");
             Bundle bundle = new Bundle();
+            bundle.putString("CustomerUniqueID", cuniqueid);
             bundle.putString(FirebaseAnalytics.Param.METHOD, "Message: Your account created.");
             mFirebaseAnalytics.logEvent(FirebaseAnalytics.Event.SIGN_UP, bundle);
             HashMap cData = new HashMap<String, String>();
+            cData.put("cd.CustomerUniqueID", cuniqueid);
             cData.put("cd.LoginType", "Your account created");
             cData.put("cd.screenName", "SignUpScreen");
-            MobileCore.trackState("SignUpScreen", cData);
+            MobileCore.trackAction("SignUpScreenSuccess", cData);
             loadingBar.setCanceledOnTouchOutside(false);
             loadingBar.show();
-            ValidatephoneNumber(name, phone, password);
+            ValidatephoneNumber(name, phone, password, cuniqueid);
         }
     }
 
-    private void ValidatephoneNumber(final String name, final String phone,final String password) {
+    private void ValidatephoneNumber(final String name, final String phone,final String password,final String cuniqueid) {
         final DatabaseReference RootRef;
         RootRef = FirebaseDatabase.getInstance().getReference();
         RootRef.addListenerForSingleValueEvent(new ValueEventListener() {
@@ -160,6 +169,7 @@ public class RegisterActivity extends AppCompatActivity {
                     userdataMap.put("phone", phone);
                     userdataMap.put("password", password);
                     userdataMap.put("name", name);
+                    userdataMap.put("customeruniqueid", cuniqueid);
                     RootRef.child("Users").child(phone).updateChildren(userdataMap).addOnCompleteListener(new OnCompleteListener<Void>() {
                         @Override
                         public void onComplete(@NonNull Task<Void> task) {
@@ -177,6 +187,7 @@ public class RegisterActivity extends AppCompatActivity {
                                 cData.put("cd.screenName", "SignUpScreen");
                                 MobileCore.trackState("SignUpScreen", cData);
                                 Intent intent = new Intent(RegisterActivity.this, com.dhruva.shopping.LoginActivity.class);
+                                intent.putExtra("CustomerUniqueID",cuniqueid);
                                 startActivity(intent);
                             }
                             else
@@ -208,6 +219,7 @@ public class RegisterActivity extends AppCompatActivity {
                     MobileCore.trackState("SignUpScreen", cData);
                     //Toast.makeText(RegisterActivity.this, "Please try again using another phone number.", Toast.LENGTH_SHORT).show();
                     Intent intent = new Intent(RegisterActivity.this, com.dhruva.shopping.MainActivity.class);
+                    intent.putExtra("CustomerUniqueID",cuniqueid);
                     startActivity(intent);
                 }
             }

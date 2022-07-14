@@ -1,17 +1,18 @@
 package com.dhruva.shopping.Model;
 
 public class Users {
-    private String name, phone, password, image, address;
+    private String name, phone, password, image, address, customeruniqueid;
     public Users()
     {
     }
 
-    public Users(String name, String phone, String password, String image, String address) {
+    public Users(String name, String phone, String password, String image, String address, String customeruniqueid) {
         this.name = name;
         this.phone = phone;
         this.password = password;
         this.image = image;
         this.address = address;
+        this.customeruniqueid = customeruniqueid;
     }
 
     public String getName() { return name; }
@@ -33,4 +34,8 @@ public class Users {
     public String getAddress() { return address; }
 
     public void setAddress(String address) { this.address = address; }
+
+    public String getCustomerUniqueID() { return customeruniqueid; }
+
+    public void setCustomerUniqueID(String customeruniqueid) { this.customeruniqueid = customeruniqueid; }
 }

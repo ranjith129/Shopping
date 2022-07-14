@@ -6,7 +6,7 @@ import com.dhruva.shopping.Interface.ItemClickListner;
 import com.dhruva.shopping.R;
 
 public class CartViewHolder extends RecyclerView.ViewHolder implements View.OnClickListener {
-    public TextView txtProductName,txtProductPrice,txtProductQuantity,txtProductID,txtProductOrderDate,txtProductOrderTime;
+    public TextView txtProductName,txtProductPrice,txtProductQuantity,txtProductID,txtProductOrderDate,txtProductOrderTime,txtCustomerUniqueID;
     private ItemClickListner itemClickListner;
 
     public CartViewHolder(View itemView) {
@@ -17,6 +17,7 @@ public class CartViewHolder extends RecyclerView.ViewHolder implements View.OnCl
         txtProductName = itemView.findViewById(R.id.cart_product_name);
         txtProductPrice = itemView.findViewById(R.id.cart_product_price);
         txtProductQuantity = itemView.findViewById(R.id.cart_product_quantity);
+        //txtCustomerUniqueID = itemView.findViewById(R.id.cartCustomerUniqueID);
     }
 
     @Override

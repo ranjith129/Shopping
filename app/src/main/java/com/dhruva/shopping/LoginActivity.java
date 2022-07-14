@@ -1,4 +1,5 @@
 package com.dhruva.shopping;
+
 import android.app.ProgressDialog;
 import android.content.Intent;
 import android.os.Bundle;
@@ -9,9 +10,11 @@ import android.widget.Button;
 import android.widget.EditText;
 import android.widget.TextView;
 import android.widget.Toast;
+
 import androidx.annotation.NonNull;
 import androidx.appcompat.app.AppCompatActivity;
 
+import com.adobe.marketing.mobile.MobileCore;
 import com.dhruva.shopping.Admin.AdminCategoryActivity;
 import com.dhruva.shopping.Model.Users;
 import com.dhruva.shopping.Prevalent.Prevalent;
@@ -22,11 +25,10 @@ import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.FirebaseDatabase;
 import com.google.firebase.database.ValueEventListener;
 import com.rey.material.widget.CheckBox;
-import io.paperdb.Paper;
-
-import com.adobe.marketing.mobile.MobileCore;
 
 import java.util.HashMap;
+
+import io.paperdb.Paper;
 
 public class LoginActivity extends AppCompatActivity {
     private EditText InputPhoneNumber, InputPassword;
@@ -190,6 +192,9 @@ public class LoginActivity extends AppCompatActivity {
             public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
                 if (dataSnapshot.child(parentDbName).child(phone).exists()){
                     Users usersData = dataSnapshot.child(parentDbName).child(phone).getValue(Users.class);
+                    String cuniqueid = usersData.getCustomerUniqueID();
+                    Paper.book().write(Prevalent.CustomerUniqueID, cuniqueid);
+
                     if (usersData.getPhone().equals(phone))
                     {
                         if (usersData.getPassword().equals(password))
@@ -200,13 +205,16 @@ public class LoginActivity extends AppCompatActivity {
                                 loadingBar.dismiss();
                                 Log.d("Step_name", "Admin Login Succeed");
                                 Bundle bundle = new Bundle();
+                                bundle.putString("CustomerUniqueID", cuniqueid);
                                 bundle.putString(FirebaseAnalytics.Param.METHOD, "Message: Admin Login Succeed");
                                 mFirebaseAnalytics.logEvent("Admin_Login_Succeed", bundle);
                                 HashMap cData = new HashMap<String, String>();
                                 cData.put("cd.LoginType", "Admin Login Succeed");
                                 cData.put("cd.screenName", "LoginScreen");
+                                cData.put("cd.CustomerUniqueID", cuniqueid);
                                 MobileCore.trackState("LoginScreen", cData);
                                 Intent intent = new Intent(LoginActivity.this, AdminCategoryActivity.class);
+                                //intent.putExtra("CustomerUniqueID",cuniqueid);
                                 startActivity(intent);
                             }
                             else if (parentDbName.equals("Users")){
@@ -214,13 +222,16 @@ public class LoginActivity extends AppCompatActivity {
                                 loadingBar.dismiss();
                                 Log.d("Step_name", "User Login Succeed");
                                 Bundle bundle = new Bundle();
+                                bundle.putString("CustomerUniqueID", cuniqueid);
                                 bundle.putString(FirebaseAnalytics.Param.METHOD, "Message: User Login Succeed");
                                 mFirebaseAnalytics.logEvent("User_Login_Succeed", bundle);
                                 HashMap cData = new HashMap<String, String>();
                                 cData.put("cd.LoginType", "User Login Succeed");
                                 cData.put("cd.screenName", "LoginScreen");
+                                cData.put("cd.CustomerUniqueID", cuniqueid);
                                 MobileCore.trackState("LoginScreen", cData);
                                 Intent intent = new Intent(LoginActivity.this, HomeActivity.class);
+                                //intent.putExtra("CustomerUniqueID",cuniqueid);
                                 Prevalent.currentOnlineUser = usersData;
                                 startActivity(intent);
                             }

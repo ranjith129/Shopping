@@ -1,4 +1,5 @@
 package com.dhruva.shopping;
+
 import android.app.ProgressDialog;
 import android.content.Intent;
 import android.os.Bundle;
@@ -7,39 +8,33 @@ import android.util.Log;
 import android.view.View;
 import android.widget.Button;
 import android.widget.Toast;
+
 import androidx.annotation.NonNull;
 import androidx.appcompat.app.AppCompatActivity;
+
+import com.adobe.marketing.mobile.AdobeCallback;
+import com.adobe.marketing.mobile.Analytics;
+import com.adobe.marketing.mobile.Identity;
+import com.adobe.marketing.mobile.InvalidInitException;
+import com.adobe.marketing.mobile.Lifecycle;
+import com.adobe.marketing.mobile.LoggingMode;
+import com.adobe.marketing.mobile.MobileCore;
+import com.adobe.marketing.mobile.Signal;
+import com.adobe.marketing.mobile.Target;
+import com.adobe.marketing.mobile.UserProfile;
 import com.dhruva.shopping.Model.Users;
 import com.dhruva.shopping.Prevalent.Prevalent;
-import com.google.ar.core.Config;
 import com.google.firebase.analytics.FirebaseAnalytics;
 import com.google.firebase.database.DataSnapshot;
 import com.google.firebase.database.DatabaseError;
 import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.FirebaseDatabase;
 import com.google.firebase.database.ValueEventListener;
-import io.paperdb.Paper;
-import com.adobe.marketing.mobile.AdobeCallback;
-import com.adobe.marketing.mobile.Analytics;
-import com.adobe.marketing.mobile.Identity;
-import com.adobe.marketing.mobile.InvalidInitException;
-import com.adobe.marketing.mobile.Lifecycle;
-import com.adobe.marketing.mobile.LoggingMode;
-import com.adobe.marketing.mobile.MobileCore;
-import com.adobe.marketing.mobile.Signal;
-import com.adobe.marketing.mobile.Target;
-import com.adobe.marketing.mobile.UserProfile;
+
 import java.util.HashMap;
-import com.adobe.marketing.mobile.AdobeCallback;
-import com.adobe.marketing.mobile.Analytics;
-import com.adobe.marketing.mobile.Identity;
-import com.adobe.marketing.mobile.InvalidInitException;
-import com.adobe.marketing.mobile.Lifecycle;
-import com.adobe.marketing.mobile.LoggingMode;
-import com.adobe.marketing.mobile.MobileCore;
-import com.adobe.marketing.mobile.Signal;
-import com.adobe.marketing.mobile.Target;
-import com.adobe.marketing.mobile.UserProfile;
+//import java.util.UUID;
+
+import io.paperdb.Paper;
 
 public class MainActivity extends AppCompatActivity {
     private Button joinNowButton, loginButton;
@@ -59,6 +54,7 @@ public class MainActivity extends AppCompatActivity {
         joinNowButton = (Button) findViewById(R.id.main_join_now_btn);
         loginButton = (Button) findViewById(R.id.main_login_btn);
         loadingBar = new ProgressDialog(this);
+
         Paper.init(this);
         Log.d("Step_name", "Application Started");
         Bundle bundle = new Bundle();
@@ -66,6 +62,7 @@ public class MainActivity extends AppCompatActivity {
         HashMap cData = new HashMap<String, String>();
         cData.put("cd.AppOpened", "Main Activity");
         cData.put("cd.screenName", "MainScreen");
+
         try{
             Target.registerExtension();
             Analytics.registerExtension();
@@ -78,8 +75,11 @@ public class MainActivity extends AppCompatActivity {
                 public void call(Object o) {
                     MobileCore.configureWithAppID("4fa03d1212c6/eac0d963ebae/launch-da73755d4a8b");
                 }
+
             });
 
+            cData.put("cd.screenName", "MainScreen");
+            MobileCore.trackState("MainScreen", cData);
         } catch (InvalidInitException e) {
             e.printStackTrace();
         }

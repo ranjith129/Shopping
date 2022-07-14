@@ -1,12 +1,12 @@
 package com.dhruva.shopping.Model;
 
 public class Products {
-    private String pname, description, price, image, category, pid, date, time;
+    private String pname, description, price, image, category, pid, date, time, customeruniqueid;
     public Products()
     {
 
     }
-    public Products(String pname, String description, String price, String image, String category, String pid, String date, String time) {
+    public Products(String pname, String description, String price, String image, String category, String pid, String date, String time,String customeruniqueid) {
         this.pname = pname;
         this.description = description;
         this.price = price;
@@ -15,6 +15,7 @@ public class Products {
         this.pid = pid;
         this.date = date;
         this.time = time;
+        this.customeruniqueid = customeruniqueid;
     }
     public String getPname() {
         return pname;
@@ -78,4 +79,7 @@ public class Products {
         this.time = time;
     }
 
+    public String getCustomerUniqueID() { return customeruniqueid; }
+
+    public void setCustomerUniqueID(String CustomerUniqueID) { this.customeruniqueid = customeruniqueid; }
 }
