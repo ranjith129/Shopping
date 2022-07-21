@@ -34,7 +34,7 @@ public class RegisterActivity extends AppCompatActivity {
     private EditText InputName, InputPhoneNumber, InputPassword;
     private ProgressDialog loadingBar;
     private FirebaseAnalytics mFirebaseAnalytics;
-    //private TextView RegisterCustomerUniqueID;
+    private String cuniqueid,deviceUDID,deviceModel,deviceName,deviceManufacturer,deviceBoard,deviceBrand;
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         if (getSupportActionBar() != null) {
@@ -72,6 +72,13 @@ public class RegisterActivity extends AppCompatActivity {
             HashMap cData = new HashMap<String, String>();
             cData.put("cd.InputError", "Please enter your name");
             cData.put("cd.screenName", "SignUpScreen");
+            cData.put("cd.CustomerUniqueID", cuniqueid);
+            cData.put("cd.deviceUDID", deviceUDID);
+            cData.put("cd.deviceModel", deviceModel);
+            cData.put("cd.deviceName", deviceName);
+            cData.put("cd.deviceManufacturer", deviceManufacturer);
+            cData.put("cd.deviceBoard", deviceBoard);
+            cData.put("cd.deviceBrand", deviceBrand);
             MobileCore.trackState("SignUpScreen", cData);
         }
         //Reg exp: "^[a-zA-Z\\\\s]{5,30}$"
@@ -84,6 +91,8 @@ public class RegisterActivity extends AppCompatActivity {
             HashMap cData = new HashMap<String, String>();
             cData.put("cd.InputError", "Please enter valid name");
             cData.put("cd.screenName", "SignUpScreen");
+            cData.put("cd.CustomerUniqueID", cuniqueid);
+            cData.put("cd.deviceUDID", deviceUDID);
             MobileCore.trackState("SignUpScreen", cData);
         }
         else if (TextUtils.isEmpty(phone))
@@ -95,6 +104,8 @@ public class RegisterActivity extends AppCompatActivity {
             HashMap cData = new HashMap<String, String>();
             cData.put("cd.InputError", "Please enter your phone number");
             cData.put("cd.screenName", "SignUpScreen");
+            cData.put("cd.deviceUDID", deviceUDID);
+            cData.put("cd.CustomerUniqueID", cuniqueid);
             MobileCore.trackState("SignUpScreen", cData);
             Toast.makeText(this, "Please enter your phone number.", Toast.LENGTH_SHORT).show();
         }
@@ -106,6 +117,8 @@ public class RegisterActivity extends AppCompatActivity {
             HashMap cData = new HashMap<String, String>();
             cData.put("cd.InputError", "Enter valid phone number");
             cData.put("cd.screenName", "SignUpScreen");
+            cData.put("cd.deviceUDID", deviceUDID);
+            cData.put("cd.CustomerUniqueID", cuniqueid);
             MobileCore.trackState("SignUpScreen", cData);
             Toast.makeText(this, "Please enter valid phone number. Phone number Hint: First number start only with 6-9 maximum 10 digit", Toast.LENGTH_SHORT).show();
         }
@@ -115,9 +128,7 @@ public class RegisterActivity extends AppCompatActivity {
             Bundle bundle = new Bundle();
             bundle.putString(FirebaseAnalytics.Param.METHOD, "Error: Please enter your password");
             mFirebaseAnalytics.logEvent("SignUp_EnterPassword_Error", bundle);
-            HashMap cData = new HashMap<String, String>();
-            cData.put("cd.InputError", "Please enter your password");
-            cData.put("cd.screenName", "SignUpScreen");
+            HashMap cData = new HashMap<String, String>(){{put("cd.InputError","Please enter your password");put("cd.screenName", "SignUpScreen");put("cd.deviceUDID", deviceUDID);put("cd.CustomerUniqueID", cuniqueid);}};
             MobileCore.trackState("SignUpScreen", cData);
             Toast.makeText(this, "Please enter your password.", Toast.LENGTH_SHORT).show();
         }
@@ -126,9 +137,7 @@ public class RegisterActivity extends AppCompatActivity {
             Bundle bundle = new Bundle();
             bundle.putString(FirebaseAnalytics.Param.METHOD, "Error: Enter valid password");
             mFirebaseAnalytics.logEvent("SignUp_EnterPassword_ValidError", bundle);
-            HashMap cData = new HashMap<String, String>();
-            cData.put("cd.InputError", "Enter valid password");
-            cData.put("cd.screenName", "SignUpScreen");
+            HashMap cData = new HashMap<String, String>() {{put("cd.InputError", "Enter valid password");put("cd.screenName", "SignUpScreen");put("cd.deviceUDID", deviceUDID);put("cd.CustomerUniqueID", cuniqueid);}};
             MobileCore.trackAction("SignUpScreen", cData);
             Toast.makeText(this, "Please enter valid password. Password Hint: Password required combined with following all one digit/lower/upper/special character with maximum 8 to 20 characters", Toast.LENGTH_SHORT).show();
         }
@@ -185,6 +194,7 @@ public class RegisterActivity extends AppCompatActivity {
                                 HashMap cData = new HashMap<String, String>();
                                 cData.put("cd.LoginType", "User account created");
                                 cData.put("cd.screenName", "SignUpScreen");
+                                cData.put("cd.CustomerUniqueID", cuniqueid);
                                 MobileCore.trackState("SignUpScreen", cData);
                                 Intent intent = new Intent(RegisterActivity.this, com.dhruva.shopping.LoginActivity.class);
                                 intent.putExtra("CustomerUniqueID",cuniqueid);
@@ -200,6 +210,7 @@ public class RegisterActivity extends AppCompatActivity {
                                 HashMap cData = new HashMap<String, String>();
                                 cData.put("cd.InputError", "Account creation failed");
                                 cData.put("cd.screenName", "SignUpScreen");
+                                cData.put("cd.CustomerUniqueID", cuniqueid);
                                 MobileCore.trackState("SignUpScreen", cData);
                                 Toast.makeText(RegisterActivity.this, "Network Error: Please try again after some time.", Toast.LENGTH_SHORT).show();
                             }
@@ -216,6 +227,7 @@ public class RegisterActivity extends AppCompatActivity {
                     HashMap cData = new HashMap<String, String>();
                     cData.put("cd.InputError", "Account Phone number already exists");
                     cData.put("cd.screenName", "SignUpScreen");
+                    cData.put("cd.CustomerUniqueID", cuniqueid);
                     MobileCore.trackState("SignUpScreen", cData);
                     //Toast.makeText(RegisterActivity.this, "Please try again using another phone number.", Toast.LENGTH_SHORT).show();
                     Intent intent = new Intent(RegisterActivity.this, com.dhruva.shopping.MainActivity.class);
@@ -233,6 +245,7 @@ public class RegisterActivity extends AppCompatActivity {
                 HashMap cData = new HashMap<String, String>();
                 cData.put("cd.LoginType", "New Account Creation Cancelled");
                 cData.put("cd.screenName", "SignUpScreen");
+                cData.put("cd.CustomerUniqueID", cuniqueid);
                 MobileCore.trackState("SignUpScreen", cData);
             }
         });

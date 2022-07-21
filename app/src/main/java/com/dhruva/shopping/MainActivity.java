@@ -1,8 +1,15 @@
 package com.dhruva.shopping;
 
+import static android.os.Build.BOARD;
+import static android.os.Build.BRAND;
+import static android.os.Build.DEVICE;
+import static android.os.Build.MANUFACTURER;
+import static android.os.Build.MODEL;
+
 import android.app.ProgressDialog;
 import android.content.Intent;
 import android.os.Bundle;
+import android.provider.Settings;
 import android.text.TextUtils;
 import android.util.Log;
 import android.view.View;
@@ -32,7 +39,6 @@ import com.google.firebase.database.FirebaseDatabase;
 import com.google.firebase.database.ValueEventListener;
 
 import java.util.HashMap;
-//import java.util.UUID;
 
 import io.paperdb.Paper;
 
@@ -40,6 +46,7 @@ public class MainActivity extends AppCompatActivity {
     private Button joinNowButton, loginButton;
     private ProgressDialog loadingBar;
     private FirebaseAnalytics mFirebaseAnalytics;
+    private String cuniqueid,deviceUDID,deviceModel,deviceName,deviceManufacturer,deviceBoard,deviceBrand;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -57,12 +64,15 @@ public class MainActivity extends AppCompatActivity {
 
         Paper.init(this);
         Log.d("Step_name", "Application Started");
+        String deviceUDID = Settings.Secure.getString(getContentResolver(),Settings.Secure.ANDROID_ID);
+        String deviceModel = MODEL;
+        String deviceName = DEVICE;
+        String deviceManufacturer = MANUFACTURER;
+        String deviceBoard = BOARD;
+        String deviceBrand = BRAND;
         Bundle bundle = new Bundle();
         bundle.putString("App_Open", "Application Opened");
-        HashMap cData = new HashMap<String, String>();
-        cData.put("cd.AppOpened", "Main Activity");
-        cData.put("cd.screenName", "MainScreen");
-
+        HashMap cData = new HashMap<String, String>() {{put("cd.AppOpened", "Main Activity");put("cd.screenName", "MainScreen");put("cd.deviceUDID", deviceUDID);put("cd.deviceModel", deviceModel);put("cd.deviceName", deviceName);put("cd.deviceManufacturer", deviceManufacturer);put("cd.deviceBoard", deviceBoard);put("cd.deviceBrand", deviceBrand);}};
         try{
             Target.registerExtension();
             Analytics.registerExtension();
@@ -75,10 +85,16 @@ public class MainActivity extends AppCompatActivity {
                 public void call(Object o) {
                     MobileCore.configureWithAppID("4fa03d1212c6/eac0d963ebae/launch-da73755d4a8b");
                 }
-
             });
-
+            Log.d("Step_name", "deviceUDID Creation" + deviceUDID);
             cData.put("cd.screenName", "MainScreen");
+            cData.put("cd.CustomerUniqueID", cuniqueid);
+            cData.put("cd.deviceUDID", deviceUDID);
+            cData.put("cd.deviceModel", deviceModel);
+            cData.put("cd.deviceName", deviceName);
+            cData.put("cd.deviceManufacturer", deviceManufacturer);
+            cData.put("cd.deviceBoard", deviceBoard);
+            cData.put("cd.deviceBrand", deviceBrand);
             MobileCore.trackState("MainScreen", cData);
         } catch (InvalidInitException e) {
             e.printStackTrace();
@@ -90,12 +106,29 @@ public class MainActivity extends AppCompatActivity {
                 Log.d("Step_name", "Navigated to Login Section");
                 Bundle bundle = new Bundle();
                 bundle.putString(FirebaseAnalytics.Param.METHOD, "Button: Navigated to Login Section");
+                bundle.putString("CustomerUniqueID", cuniqueid);
+                bundle.putString("deviceUDID", deviceUDID);
                 mFirebaseAnalytics.logEvent(FirebaseAnalytics.Event.LOGIN, bundle);
-                HashMap cData = new HashMap<String, String>();
-                cData.put("cd.NavigationType", "Navigated to Login Section");
-                cData.put("cd.screenName", "MainScreen");
+                HashMap cData = new HashMap<String, String>(){{
+                put("cd.NavigationType", "Navigated to Login Section");
+                put("cd.screenName", "MainScreen");
+                put("cd.CustomerUniqueID", cuniqueid);
+                put("cd.deviceUDID", deviceUDID);
+                put("cd.deviceModel", deviceModel);
+                put("cd.deviceName", deviceName);
+                put("cd.deviceManufacturer", deviceManufacturer);
+                put("cd.deviceBoard", deviceBoard);
+                put("cd.deviceBrand", deviceBrand);
+                }};
                 MobileCore.trackState("MainScreen", cData);
                 Intent intent = new Intent(MainActivity.this, LoginActivity.class);
+                intent.putExtra("CustomerUniqueID", cuniqueid);
+                intent.putExtra("deviceUDID", deviceUDID);
+                intent.putExtra("deviceModel", deviceModel);
+                intent.putExtra("deviceName", deviceName);
+                intent.putExtra("deviceManufacturer", deviceManufacturer);
+                intent.putExtra("deviceBoard", deviceBoard);
+                intent.putExtra("deviceBrand", deviceBrand);
                 startActivity(intent);
             }
         });
@@ -111,9 +144,23 @@ public class MainActivity extends AppCompatActivity {
                 mFirebaseAnalytics.logEvent(FirebaseAnalytics.Event.SIGN_UP, bundle);
                 HashMap cData = new HashMap<String, String>();
                 cData.put("cd.NavigationType", "Navigated to Sign in screen");
+                cData.put("cd.CustomerUniqueID", cuniqueid);
+                cData.put("cd.deviceUDID", deviceUDID);
+                cData.put("cd.deviceModel", deviceModel);
+                cData.put("cd.deviceName", deviceName);
+                cData.put("cd.deviceManufacturer", deviceManufacturer);
+                cData.put("cd.deviceBoard", deviceBoard);
+                cData.put("cd.deviceBrand", deviceBrand);
                 cData.put("cd.screenName", "MainScreen");
                 MobileCore.trackState("MainScreen", cData);
                 Intent intent = new Intent(MainActivity.this, RegisterActivity.class);
+                intent.putExtra("CustomerUniqueID", cuniqueid);
+                intent.putExtra("deviceUDID", deviceUDID);
+                intent.putExtra("deviceModel", deviceModel);
+                intent.putExtra("deviceName", deviceName);
+                intent.putExtra("deviceManufacturer", deviceManufacturer);
+                intent.putExtra("deviceBoard", deviceBoard);
+                intent.putExtra("deviceBrand", deviceBrand);
                 startActivity(intent);
             }
         });
@@ -129,6 +176,13 @@ public class MainActivity extends AppCompatActivity {
                 // Bundle bundle = new Bundle();
                 bundle.putString(FirebaseAnalytics.Param.METHOD, "Message: Getting Logged in");
                 mFirebaseAnalytics.logEvent("Logged_In", bundle);
+                cData.put("cd.CustomerUniqueID", cuniqueid);
+                cData.put("cd.deviceUDID", deviceUDID);
+                cData.put("cd.deviceModel", deviceModel);
+                cData.put("cd.deviceName", deviceName);
+                cData.put("cd.deviceManufacturer", deviceManufacturer);
+                cData.put("cd.deviceBoard", deviceBoard);
+                cData.put("cd.deviceBrand", deviceBrand);
                 cData.put("cd.LoginType", "Getting Logged in");
                 cData.put("cd.screenName", "MainScreen");
                 MobileCore.trackState("MainScreen", cData);
@@ -160,11 +214,25 @@ public class MainActivity extends AppCompatActivity {
                             HashMap cData = new HashMap<String, String>();
                             cData.put("cd.LoggedType", "Already logged in");
                             cData.put("cd.screenName", "MainScreen");
+                            cData.put("cd.CustomerUniqueID", cuniqueid);
+                            cData.put("cd.deviceUDID", deviceUDID);
+                            cData.put("cd.deviceModel", deviceModel);
+                            cData.put("cd.deviceName", deviceName);
+                            cData.put("cd.deviceManufacturer", deviceManufacturer);
+                            cData.put("cd.deviceBoard", deviceBoard);
+                            cData.put("cd.deviceBrand", deviceBrand);
                             MobileCore.trackState("MainScreen", cData);
                             Toast.makeText(MainActivity.this, "Please wait, you are already logged in.", Toast.LENGTH_SHORT).show();
                             loadingBar.dismiss();
                             Intent intent = new Intent(MainActivity.this, HomeActivity.class);
                             Prevalent.currentOnlineUser = usersData;
+                            intent.putExtra("CustomerUniqueID", cuniqueid);
+                            intent.putExtra("deviceUDID", deviceUDID);
+                            intent.putExtra("deviceModel", deviceModel);
+                            intent.putExtra("deviceName", deviceName);
+                            intent.putExtra("deviceManufacturer", deviceManufacturer);
+                            intent.putExtra("deviceBoard", deviceBoard);
+                            intent.putExtra("deviceBrand", deviceBrand);
                             startActivity(intent);
                         }
                         else {
@@ -175,6 +243,13 @@ public class MainActivity extends AppCompatActivity {
                             HashMap cData = new HashMap<String, String>();
                             cData.put("cd.InputError", "Login Password Incorrect");
                             cData.put("cd.screenName", "MainScreen");
+                            cData.put("cd.CustomerUniqueID", cuniqueid);
+                            cData.put("cd.deviceUDID", deviceUDID);
+                            cData.put("cd.deviceModel", deviceModel);
+                            cData.put("cd.deviceName", deviceName);
+                            cData.put("cd.deviceManufacturer", deviceManufacturer);
+                            cData.put("cd.deviceBoard", deviceBoard);
+                            cData.put("cd.deviceBrand", deviceBrand);
                             MobileCore.trackState("MainScreen", cData);
                             loadingBar.dismiss();
                             Toast.makeText(MainActivity.this,"Password is incorrect. Enter correct password to proceed.",Toast.LENGTH_SHORT).show();
@@ -189,6 +264,13 @@ public class MainActivity extends AppCompatActivity {
                     HashMap cData = new HashMap<String, String>();
                     cData.put("cd.InputError", "Phone number do not exists");
                     cData.put("cd.screenName", "MainScreen");
+                    cData.put("cd.CustomerUniqueID", cuniqueid);
+                    cData.put("cd.deviceUDID", deviceUDID);
+                    cData.put("cd.deviceModel", deviceModel);
+                    cData.put("cd.deviceName", deviceName);
+                    cData.put("cd.deviceManufacturer", deviceManufacturer);
+                    cData.put("cd.deviceBoard", deviceBoard);
+                    cData.put("cd.deviceBrand", deviceBrand);
                     MobileCore.trackState("MainScreen", cData);
                     Toast.makeText(MainActivity.this, "Account with this " + phone + " number do not exists.", Toast.LENGTH_SHORT).show();
                     loadingBar.dismiss();
@@ -204,6 +286,13 @@ public class MainActivity extends AppCompatActivity {
                 HashMap cData = new HashMap<String, String>();
                 cData.put("cd.LoginType", "Login Operation Cancelled");
                 cData.put("cd.screenName", "MainScreen");
+                cData.put("cd.CustomerUniqueID", cuniqueid);
+                cData.put("cd.deviceUDID", deviceUDID);
+                cData.put("cd.deviceModel", deviceModel);
+                cData.put("cd.deviceName", deviceName);
+                cData.put("cd.deviceManufacturer", deviceManufacturer);
+                cData.put("cd.deviceBoard", deviceBoard);
+                cData.put("cd.deviceBrand", deviceBrand);
                 MobileCore.trackState("MainScreen", cData);
             }
         });
@@ -217,6 +306,13 @@ public class MainActivity extends AppCompatActivity {
         cData.put("cd.category", "Shopping");
         cData.put("cd.ActivityType", "Activity on Resumed");
         cData.put("cd.screenName", "MainScreen");
+        cData.put("cd.CustomerUniqueID", cuniqueid);
+        cData.put("cd.deviceUDID", deviceUDID);
+        cData.put("cd.deviceModel", deviceModel);
+        cData.put("cd.deviceName", deviceName);
+        cData.put("cd.deviceManufacturer", deviceManufacturer);
+        cData.put("cd.deviceBoard", deviceBoard);
+        cData.put("cd.deviceBrand", deviceBrand);
         //MobileCore.trackState("Login Screen", cData);
         MobileCore.lifecycleStart(cData);
         MobileCore.trackState("MainScreen", cData);
@@ -230,6 +326,13 @@ public class MainActivity extends AppCompatActivity {
         cData.put("cd.category", "Shopping");
         cData.put("cd.ActivityType", "Activity on Paused");
         cData.put("cd.screenName", "MainScreen");
+        cData.put("cd.CustomerUniqueID", cuniqueid);
+        cData.put("cd.deviceUDID", deviceUDID);
+        cData.put("cd.deviceModel", deviceModel);
+        cData.put("cd.deviceName", deviceName);
+        cData.put("cd.deviceManufacturer", deviceManufacturer);
+        cData.put("cd.deviceBoard", deviceBoard);
+        cData.put("cd.deviceBrand", deviceBrand);
         MobileCore.trackState("MainScreen", cData);
     }
 }
