@@ -206,7 +206,8 @@ public class MainActivity extends AppCompatActivity {
                         // Get new FCM registration token
                         String token = task.getResult();
                         System.out.println(token);
-                        Toast.makeText(MainActivity.this,"Xerago Shpooing Registration Token: "+ token, Toast.LENGTH_LONG).show();
+                        Log.d("FCMRegistrationToken", token);
+                        //Toast.makeText(MainActivity.this,"Xerago Shpooing Registration Token: "+ token, Toast.LENGTH_LONG).show();
                         HashMap cData = new HashMap<String, String>();
                         cData.put("cd.FCMRegistrationToken", token);
                         cData.put("cd.screenName", "MainScreen");
