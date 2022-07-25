@@ -31,12 +31,15 @@ import com.adobe.marketing.mobile.Target;
 import com.adobe.marketing.mobile.UserProfile;
 import com.dhruva.shopping.Model.Users;
 import com.dhruva.shopping.Prevalent.Prevalent;
+import com.google.android.gms.tasks.OnCompleteListener;
+import com.google.android.gms.tasks.Task;
 import com.google.firebase.analytics.FirebaseAnalytics;
 import com.google.firebase.database.DataSnapshot;
 import com.google.firebase.database.DatabaseError;
 import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.FirebaseDatabase;
 import com.google.firebase.database.ValueEventListener;
+import com.google.firebase.messaging.FirebaseMessaging;
 
 import java.util.HashMap;
 
@@ -192,6 +195,25 @@ public class MainActivity extends AppCompatActivity {
                 loadingBar.show();
             }
         }
+
+        FirebaseMessaging.getInstance().getToken().addOnCompleteListener(new OnCompleteListener<String>() {
+                    @Override
+                    public void onComplete(@NonNull Task<String> task) {
+                        if (!task.isSuccessful()) {
+                            System.out.println("Fetching FCM registration token failed");
+                            return;
+                        }
+                        // Get new FCM registration token
+                        String token = task.getResult();
+                        System.out.println(token);
+                        Toast.makeText(MainActivity.this,"Xerago Shpooing Registration Token: "+ token, Toast.LENGTH_LONG).show();
+                        HashMap cData = new HashMap<String, String>();
+                        cData.put("cd.FCMRegistrationToken", token);
+                        cData.put("cd.screenName", "MainScreen");
+                        cData.put("cd.CustomerUniqueID", cuniqueid);
+                        MobileCore.trackState("MainScreen", cData);
+                    }
+                });
     }
 
     private void AllowAccess(final String phone, final String password)
