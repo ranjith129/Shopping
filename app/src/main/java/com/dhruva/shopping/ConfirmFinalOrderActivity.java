@@ -1,4 +1,6 @@
 package com.dhruva.shopping;
+import static com.google.firebase.analytics.FirebaseAnalytics.*;
+
 import android.content.Intent;
 import android.os.Bundle;
 import android.text.TextUtils;
@@ -57,7 +59,7 @@ public class ConfirmFinalOrderActivity extends AppCompatActivity {
             public void onClick(View view) {
                 Log.d("Step_name", "Order confirmation checking");
                 Bundle bundle = new Bundle();
-                bundle.putString(FirebaseAnalytics.Param.METHOD, "Message: Order confirmation checking");
+                bundle.putString(Param.METHOD, "Message: Order confirmation checking");
                 mFirebaseAnalytics.logEvent("OrderConfirmation_Checks", bundle);
                 HashMap cData = new HashMap<String, String>();
                 cData.put("cd.OrderStatus", "Order confirmation checking");
@@ -72,7 +74,7 @@ public class ConfirmFinalOrderActivity extends AppCompatActivity {
         if(TextUtils.isEmpty(nameEditText.getText().toString())){
             Log.d("Step_name", "Please Provide Your Full Name");
             Bundle bundle = new Bundle();
-            bundle.putString(FirebaseAnalytics.Param.METHOD, "Error: Please Provide Your Full Name");
+            bundle.putString(Param.METHOD, "Error: Please Provide Your Full Name");
             mFirebaseAnalytics.logEvent("Shipment_Name_Error", bundle);
             HashMap cData = new HashMap<String, String>();
             cData.put("cd.ShipmentValidError", "Please Provide Your Full Name");
@@ -83,7 +85,7 @@ public class ConfirmFinalOrderActivity extends AppCompatActivity {
         else if(TextUtils.isEmpty(phoneEditText.getText().toString())){
             Log.d("Step_name", "Please Provide Your Phone Number");
             Bundle bundle = new Bundle();
-            bundle.putString(FirebaseAnalytics.Param.METHOD, "Error: Please Provide Your Phone Number");
+            bundle.putString(Param.METHOD, "Error: Please Provide Your Phone Number");
             mFirebaseAnalytics.logEvent("Shipment_PhoneNumber_Error", bundle);
             HashMap cData = new HashMap<String, String>();
             cData.put("cd.ShipmentValidError", "Please Provide Your Phone Number");
@@ -94,7 +96,7 @@ public class ConfirmFinalOrderActivity extends AppCompatActivity {
         else if(TextUtils.isEmpty(addressEditText.getText().toString())){
             Log.d("Step_name", "Please Provide Your Valid Address");
             Bundle bundle = new Bundle();
-            bundle.putString(FirebaseAnalytics.Param.METHOD, "Error: Please Provide Your Valid Address");
+            bundle.putString(Param.METHOD, "Error: Please Provide Your Valid Address");
             mFirebaseAnalytics.logEvent("Shipment_Address_Error", bundle);
             HashMap cData = new HashMap<String, String>();
             cData.put("cd.ShipmentValidError", "Please Provide Your Valid Address");
@@ -105,7 +107,7 @@ public class ConfirmFinalOrderActivity extends AppCompatActivity {
         else if(TextUtils.isEmpty(cityEditText.getText().toString())){
             Log.d("Step_name", "Please Provide Your City Name");
             Bundle bundle = new Bundle();
-            bundle.putString(FirebaseAnalytics.Param.METHOD, "Error: Please Provide Your City Name");
+            bundle.putString(Param.METHOD, "Error: Please Provide Your City Name");
             mFirebaseAnalytics.logEvent("Shipment_City_Error", bundle);
             HashMap cData = new HashMap<String, String>();
             cData.put("cd.ShipmentValidError", "Please Provide Your City Name");

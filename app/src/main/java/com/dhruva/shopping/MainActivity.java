@@ -2,7 +2,6 @@ package com.dhruva.shopping;
 
 import static android.os.Build.BOARD;
 import static android.os.Build.BRAND;
-import static android.os.Build.DEVICE;
 import static android.os.Build.MANUFACTURER;
 import static android.os.Build.MODEL;
 
@@ -21,14 +20,18 @@ import androidx.appcompat.app.AppCompatActivity;
 
 import com.adobe.marketing.mobile.AdobeCallback;
 import com.adobe.marketing.mobile.Analytics;
-import com.adobe.marketing.mobile.Identity;
-import com.adobe.marketing.mobile.InvalidInitException;
+import com.adobe.marketing.mobile.Assurance;
+import com.adobe.marketing.mobile.Audience;
+import com.adobe.marketing.mobile.Extension;
 import com.adobe.marketing.mobile.Lifecycle;
 import com.adobe.marketing.mobile.LoggingMode;
+import com.adobe.marketing.mobile.Media;
 import com.adobe.marketing.mobile.MobileCore;
+import com.adobe.marketing.mobile.Places;
 import com.adobe.marketing.mobile.Signal;
 import com.adobe.marketing.mobile.Target;
-import com.adobe.marketing.mobile.UserProfile;
+import com.adobe.marketing.mobile.edge.consent.Consent;
+import com.adobe.mobile.Config;
 import com.dhruva.shopping.Model.Users;
 import com.dhruva.shopping.Prevalent.Prevalent;
 import com.google.android.gms.tasks.OnCompleteListener;
@@ -41,7 +44,9 @@ import com.google.firebase.database.FirebaseDatabase;
 import com.google.firebase.database.ValueEventListener;
 import com.google.firebase.messaging.FirebaseMessaging;
 
+import java.util.Arrays;
 import java.util.HashMap;
+import java.util.List;
 
 import io.paperdb.Paper;
 
@@ -69,14 +74,47 @@ public class MainActivity extends AppCompatActivity {
         Log.d("Step_name", "Application Started");
         String deviceUDID = Settings.Secure.getString(getContentResolver(),Settings.Secure.ANDROID_ID);
         String deviceModel = MODEL;
-        String deviceName = DEVICE;
+        String deviceName = Settings.Secure.getString(getContentResolver(),"bluetooth_name");
         String deviceManufacturer = MANUFACTURER;
         String deviceBoard = BOARD;
         String deviceBrand = BRAND;
         Bundle bundle = new Bundle();
         bundle.putString("App_Open", "Application Opened");
         HashMap cData = new HashMap<String, String>() {{put("cd.AppOpened", "Main Activity");put("cd.screenName", "MainScreen");put("cd.deviceUDID", deviceUDID);put("cd.deviceModel", deviceModel);put("cd.deviceName", deviceName);put("cd.deviceManufacturer", deviceManufacturer);put("cd.deviceBoard", deviceBoard);put("cd.deviceBrand", deviceBrand);}};
-        try{
+
+        List<Class<? extends Extension>> extensions = Arrays.asList(
+                Places.EXTENSION,
+                Consent.EXTENSION,
+                Assurance.EXTENSION,
+                Audience.EXTENSION,
+                com.adobe.marketing.mobile.edge.identity.Identity.EXTENSION,
+                com.adobe.marketing.mobile.Identity.EXTENSION,
+                Media.EXTENSION,
+                Target.EXTENSION,
+                Analytics.EXTENSION,
+                Lifecycle.EXTENSION,
+                Signal.EXTENSION
+        );
+
+        MobileCore.registerExtensions(extensions, new AdobeCallback () {
+            @Override
+            public void call(Object o) {
+                MobileCore.configureWithAppID("4fa03d1212c6/eac0d963ebae/launch-da73755d4a8b");
+            }
+        });
+
+        Log.d("Step_name", "deviceUDID Creation" + deviceUDID);
+        cData.put("cd.screenName", "MainScreen");
+        cData.put("cd.CustomerUniqueID", cuniqueid);
+        cData.put("cd.deviceUDID", deviceUDID);
+        cData.put("cd.deviceModel", deviceModel);
+        cData.put("cd.deviceName", deviceName);
+        cData.put("cd.deviceManufacturer", deviceManufacturer);
+        cData.put("cd.deviceBoard", deviceBoard);
+        cData.put("cd.deviceBrand", deviceBrand);
+        MobileCore.trackState("MainScreen", cData);
+
+        /*try{
             Target.registerExtension();
             Analytics.registerExtension();
             Identity.registerExtension();
@@ -101,7 +139,7 @@ public class MainActivity extends AppCompatActivity {
             MobileCore.trackState("MainScreen", cData);
         } catch (InvalidInitException e) {
             e.printStackTrace();
-        }
+        }*/
 
         loginButton.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -325,6 +363,7 @@ public class MainActivity extends AppCompatActivity {
     public void onResume() {
         super.onResume();
         MobileCore.setApplication(getApplication());
+        Config.collectLifecycleData(this);
         HashMap cData = new HashMap<String, String>();
         cData.put("cd.category", "Shopping");
         cData.put("cd.ActivityType", "Activity on Resumed");
